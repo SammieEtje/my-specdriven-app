@@ -13,6 +13,8 @@
 ### Session 2026-10-03
 
 - Q: Moet de demo zichtbaar als Polderworks-onderdeel worden gebrandmerkt, of neemt hij alleen de visuele foundations over? → A: Alleen de visuele foundations (kleuren, typografie, vormen); geen logo en geen endorsement-regel.
+- Q: Mogen de statustekst bij voltooide taken en `aria-pressed` op de filters worden toegevoegd, terwijl de feature alleen visueel is? → A: Ja, als expliciete toegankelijkheidsuitzondering in de aannames.
+- Q: Welke schaduw is de "terughoudende schaduw" van de dialoog? → A: `--shadow-lg`, de schaduw van het dialoogpatroon in het designsysteem.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -46,7 +48,7 @@ Als gebruiker wil ik dat knoppen, invoervelden, filters, het selectievakje van e
 1. **Given** een bedieningselement heeft toetsenbordfocus, **When** de gebruiker ernaar kijkt, **Then** is een zichtbare focusring in de focuskleur van het designsysteem te zien.
 2. **Given** de gebruiker beweegt de muis over de primaire knop, **When** de hoverstaat actief is, **Then** verschuift de knopkleur één stap in het palet (van marine naar kanaalteal) en verschijnt er geen schaduw of animatie.
 3. **Given** een filter is actief, **When** de gebruiker de filterbalk bekijkt, **Then** is de actieve filter te onderscheiden op een manier die niet alleen van kleur afhangt.
-4. **Given** de taakdialoog is geopend, **When** de gebruiker hem bekijkt, **Then** volgt de dialoog het patroon van het designsysteem: verhoogd oppervlak met een terughoudende schaduw en rechte hoeken.
+4. **Given** de taakdialoog is geopend, **When** de gebruiker hem bekijkt, **Then** volgt de dialoog het patroon van het designsysteem: verhoogd oppervlak met de schaduw van het dialoogpatroon (`--shadow-lg`) en rechte hoeken.
 
 ---
 
@@ -85,7 +87,7 @@ Als demo-presentator wil ik dat het paneel met het beslissingsspoor (fasen, feat
 - **FR-005**: Knoppen MOETEN de knopvarianten van het designsysteem volgen: "Add task" als primaire knop, "Persist demo state" en "Close" als ghost- of secundaire knop. Hover verschuift één stap in het palet.
 - **FR-006**: Invoervelden, het tekstvak, het selectievakje van een taak en de filters MOETEN de bijbehorende componentpatronen van het designsysteem volgen, met zichtbare labels of toegankelijke namen zoals nu.
 - **FR-007**: Elk bedieningselement MOET bij toetsenbordfocus een zichtbare focusring in de focuskleur van het designsysteem tonen.
-- **FR-008**: De taakdialoog MOET het dialoogpatroon van het designsysteem volgen: verhoogd oppervlak, terughoudende schaduw en rechte hoeken.
+- **FR-008**: De taakdialoog MOET het dialoogpatroon van het designsysteem volgen: verhoogd oppervlak, de schaduwtoken van dat patroon (`--shadow-lg`) en rechte hoeken.
 - **FR-009**: Het trace-object MOET in de codeblokstijl van het designsysteem worden getoond, en uitgelichte fasen of meldingen MOETEN de calloutstijl met een linkerrand van 3px gebruiken.
 - **FR-010**: Alle combinaties van tekst en achtergrond MOETEN aan WCAG 2.1 AA-contrast voldoen. Goud en rood MOGEN NIET als tekstkleur worden gebruikt.
 - **FR-011**: De app MOET volledig werken zonder netwerkverbinding. De lettertypen moeten dus offline beschikbaar zijn of terugvallen op een leesbaar systeemlettertype, en er MOGEN geen trackers of extra netwerkverzoeken met gebruikersdata bijkomen.
@@ -108,7 +110,7 @@ Als demo-presentator wil ik dat het paneel met het beslissingsspoor (fasen, feat
 
 - **Licht thema als standaard**: het designsysteem gebruikt een licht thema als standaard en een donker thema voor terminal- en CLI-oppervlakken. De app stapt daarom over van het huidige donkere uiterlijk naar het lichte thema. Een themaschakelaar valt buiten de scope.
 - **Taal van de interface**: de bestaande taal van de interfaceteksten blijft zoals die is. Deze feature verandert de vormgeving, niet de inhoud. De Britse spelling van het designsysteem geldt alleen voor Engelstalige teksten.
-- **Alleen visueel**: er komen geen nieuwe functies, geen nieuwe gegevens en geen gedragswijzigingen bij. De trace-gegevens (fasen en beschrijvingen) blijven hetzelfde, al komen er wel trace-items voor feature 003 bij.
+- **Alleen visueel**: er komen geen nieuwe functies, geen nieuwe gegevens en geen gedragswijzigingen bij. De trace-gegevens (fasen en beschrijvingen) blijven hetzelfde, al komen er wel trace-items voor feature 003 bij. Twee toegankelijkheidsaanvullingen vallen hier expliciet buiten: een voltooide taak krijgt de tekst "Completed" naast de doorhaling (edge case Statuskleuren), en de filters geven hun geselecteerde staat door met `aria-pressed` (US2, scenario 3). Het filtergedrag zelf verandert niet.
 - **Bron van waarheid**: het in deze repository geïnstalleerde designsysteem (`.claude/skills/polderworks-design`) is leidend. Waar de huidige app afwijkt, volgt de app het designsysteem.
 - **Geen iconenset**: het designsysteem gebruikt geen iconenset. Status wordt getoond met kleur, een kleine stip en tekst. Waar een glyph nodig is, wordt een minimaal teken gebruikt.
 - **Merkregels**: de verboden van het designsysteem gelden (geen molens, tulpen of oranje toeristische beelden, geen wolk-, hangslot- of schildclichés en geen verwijzingen naar concurrenten).
