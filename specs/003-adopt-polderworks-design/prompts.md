@@ -39,3 +39,16 @@
   - FR-008 names `--shadow-lg`.
   - `plan.md` justifies the English UI and docs in Complexity Tracking.
   - Plan and tasks tags were added on `f39cfb5`.
+
+## Phase: implement
+
+- Date: 2026-10-03
+- Branch: `003-adopt-polderworks-design`
+- Trigger: `/speckit-implement`
+- Goal: Execute T001 to T044. Restyle the demo on design-system tokens with self-hosted IBM Plex, without changing behaviour.
+- Notable decisions:
+  - Fonts are the Latin-1 split `woff2` files from the official `@ibm/plex-sans` 1.1.0 and `@ibm/plex-mono` 2.5.0 packages, with their OFL licence. The packages were not added as dependencies.
+  - Buttons follow the design-system variants but without its 120ms transition, per US2/AC2.
+  - The traced-element outline (dashed navy) and the focus ring (solid teal) are distinct without colour.
+  - At 360px the task actions wrap below the title.
+- Validation: `npm test` (17 tests: 5 in `logic.test.js`, 12 in `design.test.js`) and the quickstart checks run in headless Chrome (see `quickstart.md`).

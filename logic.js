@@ -124,6 +124,21 @@ export const FEATURE_SPECS = [
       tasks: 'Acceptance criteria cover editing title, description, tag, and owner while keeping the selected task in sync.',
       implement: 'The modal inputs write changes to the selected task and refresh its task card immediately.'
     }
+  },
+  // T020
+  {
+    id: 'spec-10',
+    title: 'Polderworks design system',
+    description: 'The demo uses only the visual foundations of the central design system: colour tokens, IBM Plex, square geometry and its component patterns.',
+    source: 'specify: “Adopt the central Polderworks design system in the todo app UI.”',
+    elementIds: ['app-header'],
+    phaseMap: {
+      specify: 'The demo should look like part of the house instead of a loose proof of concept, without changing any behaviour.',
+      clarify: 'Only the visual foundations are adopted: no logo and no endorsement line in the interface.',
+      plan: 'Design tokens are imported straight from the design system, components become plain CSS classes and IBM Plex is self-hosted for offline use.',
+      tasks: 'Static tests check tokens, fonts, geometry, contrast and preserved hooks before each part of the restyle is built.',
+      implement: 'The stylesheet uses only design-system tokens, and the markup gained pattern classes and 003 trace tokens.'
+    }
   }
 ];
 
