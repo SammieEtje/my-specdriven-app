@@ -1,0 +1,19 @@
+/* Polderworks Design System — Radius, shadow, border tokens
+   The identity is flat, engineered geometry: corners stay square almost
+   everywhere. A very small radius (2–3px) appears only on interactive
+   controls for usability — never a pill, never a rounded card with a
+   coloured left border. Shadows are cool-toned (navy-tinted) and restrained;
+   this is not a glossy consumer surface. */
+
+:root {
+  --radius-none: 0px;
+  --radius-xs: 2px;
+  --radius-sm: 3px;
+
+  --shadow-sm: 0 2px 8px rgba(10, 23, 33, 0.10);
+  --shadow-md: 0 8px 24px rgba(10, 23, 33, 0.16);
+  --shadow-lg: 0 16px 48px rgba(10, 23, 33, 0.22);
+
+  --border-width-hairline: 1px;
+  --border-width-accent: 3px;  /* used for the gold rule under headings, and callout left-edges */
+}

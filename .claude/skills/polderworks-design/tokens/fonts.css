@@ -1,0 +1,7 @@
+/* Polderworks Design System — Fonts
+   IBM Plex Sans / Mono / Serif — chosen because they are open-licensed (SIL OFL).
+   The brand's sovereignty story ("no lock-in") extends to its own typography:
+   nothing here depends on a proprietary foundry. Loaded from Google Fonts CDN
+   (Google mirrors the same open-licensed files; no local binaries to ship). */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Serif:wght@400;500&display=swap');

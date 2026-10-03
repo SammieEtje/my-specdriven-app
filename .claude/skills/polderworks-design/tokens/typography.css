@@ -1,0 +1,51 @@
+/* Polderworks Design System — Typography tokens
+   One open-licensed superfamily. Sans carries Polderworks and all UI/running
+   text. Mono carries Loods, the CLI, code and technical labels. Serif is
+   reserved for long-form report body copy (the Loods PDF output). */
+
+:root {
+  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+  --font-serif: 'IBM Plex Serif', Georgia, 'Times New Roman', serif;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Type scale — size / line-height / letter-spacing per step */
+  --text-display-size: 56px;
+  --text-display-lh: 1.0;
+  --text-display-tracking: -0.02em;
+
+  --text-h1-size: 38px;
+  --text-h1-lh: 1.1;
+  --text-h1-tracking: -0.015em;
+
+  --text-h2-size: 27px;
+  --text-h2-lh: 1.2;
+  --text-h2-tracking: -0.01em;
+
+  --text-h3-size: 20px;
+  --text-h3-lh: 1.3;
+  --text-h3-tracking: 0em;
+
+  --text-body-size: 18px;
+  --text-body-lh: 1.6;
+
+  --text-body-sm-size: 14px;
+  --text-body-sm-lh: 1.6;
+
+  --text-serif-body-size: 17px;
+  --text-serif-body-lh: 1.65;
+
+  --text-mono-size: 14px;
+  --text-mono-lh: 1.7;
+
+  --text-caption-size: 12px;
+  --text-caption-lh: 1.45;
+
+  --text-label-size: 11px;
+  --text-label-lh: 1.4;
+  --text-label-tracking: 0.16em;
+}

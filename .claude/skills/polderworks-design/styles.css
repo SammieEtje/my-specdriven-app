@@ -1,0 +1,9 @@
+/* Polderworks Design System — global stylesheet entry point.
+   Keep this file as @import lines only; everything it reaches is shipped
+   to consumers. */
+
+@import './tokens/fonts.css';
+@import './tokens/colors.css';
+@import './tokens/typography.css';
+@import './tokens/spacing.css';
+@import './tokens/effects.css';
