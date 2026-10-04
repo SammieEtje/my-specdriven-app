@@ -99,6 +99,7 @@ function closeTaskModal() {
 
 function renderTaskList() {
   // T027 Open button uses the secondary Button pattern
+  // T045 Task checkbox carries its 003:FR-006 trace token
   // T018 Completed class and status text, Tag pattern for the task tag
   taskListEl.innerHTML = taskState
     .map((task) => {
@@ -106,7 +107,7 @@ function renderTaskList() {
       return `
         <li class="task-card ${isSelected ? 'selected' : ''} ${task.completed ? 'completed' : ''}" data-spec="003:FR-003">
           <label class="task-main">
-            <input class="feature-target" data-target="task-toggle-${task.id}" type="checkbox" ${task.completed ? 'checked' : ''} />
+            <input class="feature-target" data-target="task-toggle-${task.id}" data-spec="003:FR-006" type="checkbox" ${task.completed ? 'checked' : ''} />
             <span class="task-content">
               <span class="task-title">${task.title}</span>
               <span class="meta">${task.owner} · ${task.tag}${task.completed ? ' · Completed' : ''}</span>

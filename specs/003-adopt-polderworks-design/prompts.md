@@ -52,3 +52,16 @@
   - The traced-element outline (dashed navy) and the focus ring (solid teal) are distinct without colour.
   - At 360px the task actions wrap below the title.
 - Validation: `npm test` (17 tests: 5 in `logic.test.js`, 12 in `design.test.js`) and the quickstart checks run in headless Chrome (see `quickstart.md`).
+
+## Phase: converge
+
+- Date: 2026-10-04
+- Branch: `003-adopt-polderworks-design`
+- Trigger: `/speckit-converge`, then `/speckit-implement` on the appended Phase 7
+- Findings:
+  - The task checkbox had no `data-spec` (Constitution III, FR-006).
+  - The badge and tag were rounded although they are not controls (FR-003).
+- Resolution:
+  - T045 adds `003:FR-006` to the checkbox.
+  - T046 squares `.badge` and `.tag`, limits rounding to controls in the FR-003 test, and gives the badge `003:FR-003`.
+  - `npm test` passes all 17 tests.

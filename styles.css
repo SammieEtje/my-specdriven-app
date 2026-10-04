@@ -79,7 +79,8 @@ button {
   cursor: pointer;
 }
 
-/* T016 Header: label-style eyebrow, h2-scale title, neutral Tag badge */
+/* T016 Header: label-style eyebrow, h2-scale title, neutral Tag badge.
+   T046 Badge and tag are square: only controls may be rounded (FR-003). */
 .app-header {
   display: flex;
   justify-content: space-between;
@@ -130,7 +131,7 @@ h3 {
   background: var(--surface-sunken);
   color: var(--text-secondary);
   border: var(--border-width-hairline) solid var(--border-default);
-  border-radius: var(--radius-xs);
+  border-radius: var(--radius-none);
 }
 
 .composer {

@@ -240,3 +240,8 @@ Task: "Create specs/003-adopt-polderworks-design/quickstart.md"                 
 - `logic.test.js` must never be edited to make it pass (SC-003).
 - The design system under `.claude/skills/polderworks-design/` is never edited.
 - Commit after each phase and tag per the constitution.
+
+## Phase 7: Convergence
+
+- [X] T045 CRITICAL: Add `data-spec="003:FR-006"` to the task checkbox `<input … type="checkbox">` in `renderTaskList()` in `app.js`, keeping `data-target="task-toggle-${task.id}"` unchanged, and extend the FR-006 test in `design.test.js` to assert it per Constitution III (partial)
+- [X] T046 Set `border-radius: var(--radius-none)` on `.badge, .tag` in `styles.css` (non-interactive elements, so no rounding), tighten the FR-003 test in `design.test.js` so `var(--radius-xs)`/`var(--radius-sm)` are only accepted on control selectors (`.btn`, `input`, `textarea`), and add `data-spec="003:FR-003"` to `<span class="badge">` in `index.html` per FR-003 (contradicts)

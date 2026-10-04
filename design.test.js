@@ -130,12 +130,21 @@ test('FR-003 square geometry, no gradients', () => {
   for (const { selector, property, value } of declarations(css)) {
     if (property === 'border-radius' && !selector.includes('status-dot')) {
       assert.ok(['0', 'var(--radius-none)', 'var(--radius-xs)', 'var(--radius-sm)'].includes(value), `${selector} has border-radius ${value}`);
+      // T046 Only controls may be rounded (FR-003)
+      if (/--radius-(xs|sm)/.test(value)) {
+        for (const part of selector.split(',')) {
+          assert.match(part.trim(), /^(\.btn\b|input\b|textarea\b)/, `${part.trim()} is not a control but is rounded`);
+        }
+      }
     }
     if (property === 'box-shadow' && value !== 'none') {
       assert.match(value, /^var\(--shadow-(sm|md|lg)\)$/, `${selector} has box-shadow ${value}`);
       assert.match(selector, /\.task-modal\b|\.callout\b/, `${selector} has a shadow on static content`);
     }
   }
+
+  // T046
+  assert.ok(dataSpecTokens(elementTag(readFile('./index.html'), 'class', 'badge')).includes('003:FR-003'), 'badge lacks 003:FR-003');
 });
 
 // T012
@@ -296,6 +305,8 @@ test('FR-006 form controls and filters', () => {
   const underline = cssValue(css, '.filter-btn[aria-pressed="true"]', 'border-bottom-color');
   assert.equal(underline, 'var(--border-strong)');
   assert.equal(cssValue(css, 'input[type="checkbox"]', 'accent-color'), 'var(--pw-navy-ink)');
+  // T045 The task checkbox carries its 003 trace token (Constitution III)
+  assert.match(readFile('./app.js'), /<input class="feature-target" data-target="task-toggle-\$\{task\.id\}" data-spec="003:FR-006" type="checkbox"/);
 });
 
 // T025
