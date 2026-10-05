@@ -13,8 +13,9 @@ This is the binding interface for the e2e tests (`e2e/core-flow.spec.js` from 00
 | `#task-input-error` (new `<p>`) | empty unless there is an error. Text: "Enter a task title." | `005:FR-004` |
 | `.filter-btn` × 3 | clicking sets the filter and re-renders | keep `003:FR-006`, add `005:FR-005` |
 | `#empty-state` | shown when the filtered list is empty. Heading and text per data-model table | keep `003:FR-003`, add `005:FR-007` |
+| `div.meta-actions` (new wrapper) | groups `#save-state` and `#app-status` so the footer keeps two items (analyze L1) | none |
 | `#save-state` | saves and announces | keep `003:FR-005`, add `005:FR-010` |
-| `#app-status` (new `<p role="status">`) | "Demo state saved" / "Task added to Active". Clears after 4 s | `005:FR-010` |
+| `#app-status` (new `<p role="status">`) | "Demo state saved" / "Task added to Active". Clears after 4 s | `005:FR-005 005:FR-010` |
 
 ## Events
 

@@ -14,6 +14,7 @@
 
 - Q: Wordt er automatisch bij elke wijziging bewaard, of alleen via "Persist demo state"? → A: Automatisch bij elke wijziging. De knop bewaart expliciet en toont een bevestiging.
 - Q: Moeten gebruikers taken kunnen verwijderen? → A: Nee, dat valt buiten de scope. De lege staat is bereikbaar via een filter.
+- Q (analyze G1): Moeten de nieuwe hulpelementen (foutmelding, statusmelding) een eigen spoor in het spoorpaneel krijgen? → A: Nee. FR-013 vraagt alleen een `data-spec`-token; de bestaande trace-items uit 001 dekken de bedieningselementen.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -105,7 +106,7 @@ Als demo-gebruiker wil ik dat mijn taken en wijzigingen na het herladen van de p
 - **FR-002**: Een nieuwe taak MOET actief zijn, de ingevoerde titel hebben (zonder spaties aan begin en eind), lege toelichting, tag en eigenaar hebben, en onderaan de lijst verschijnen.
 - **FR-003**: Na toevoegen MOET het invoerveld leeg zijn en de focus houden.
 - **FR-004**: Een lege titel of een titel van alleen spaties MOET worden geweigerd. De melding MOET aan het invoerveld gekoppeld zijn (constitution IV) en verdwijnen zodra de gebruiker begint te typen.
-- **FR-005**: De filters "All", "Active" en "Completed" MOETEN de zichtbare taken beperken tot respectievelijk alle, niet-voltooide en voltooide taken. De lijst MOET direct bijwerken bij elke statuswijziging en elke nieuwe taak.
+- **FR-005**: De filters "All", "Active" en "Completed" MOETEN de zichtbare taken beperken tot respectievelijk alle, niet-voltooide en voltooide taken. De lijst MOET direct bijwerken bij elke statuswijziging en elke nieuwe taak. Wordt er een taak toegevoegd terwijl "Completed" gekozen is, dan MOET een korte, voor schermlezers aangekondigde melding zeggen dat de taak aan "Active" is toegevoegd.
 - **FR-006**: Het geselecteerde filter MOET via de bestaande `aria-pressed`-staat aan hulptechnologie worden doorgegeven (zoals in 003).
 - **FR-007**: Wanneer de zichtbare lijst leeg is, MOET de lege staat worden getoond in plaats van de lijst, met een tekst die past bij het filter.
 - **FR-008**: Elke wijziging aan de taken (toevoegen, afvinken, bewerken) MOET direct automatisch worden bewaard, zodat titel, toelichting, tag, eigenaar en status na herladen behouden blijven. Er wordt uitsluitend in de lokale opslag van de browser bewaard (constitution V).
@@ -113,7 +114,7 @@ Als demo-gebruiker wil ik dat mijn taken en wijzigingen na het herladen van de p
 - **FR-010**: "Persist demo state" MOET de huidige staat expliciet bewaren en een korte, voor schermlezers aangekondigde bevestiging tonen. Omdat er al automatisch wordt bewaard, is de knop een geruststelling en geen vereiste stap.
 - **FR-011**: Een titel die in de taakdialoog wordt leeggemaakt, MOET bij het sluiten worden teruggezet naar de laatste niet-lege titel.
 - **FR-012**: Bestaand gedrag uit 001, 003 en 004 MOET ongewijzigd blijven: afvinken, openen en bewerken, sluiten met focus terug op Open, het spoorpaneel, `data-spec`- en `data-target`-attributen, de huisstijl en de escaping van gebruikersinvoer.
-- **FR-013**: Nieuwe en gewijzigde elementen MOETEN een `data-spec`-attribuut voor 005 dragen en vindbaar zijn in het spoorpaneel (constitution III).
+- **FR-013**: Nieuwe en gewijzigde elementen MOETEN een `data-spec`-attribuut voor 005 dragen (constitution III). Voor de bedieningselementen blijven de bestaande trace-items uit 001 het spoor tonen. Hulpelementen zoals de foutmelding en de statusmelding zijn niet klikbaar voor het spoor.
 
 ### Key Entities
 

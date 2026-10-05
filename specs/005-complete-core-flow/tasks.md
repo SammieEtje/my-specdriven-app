@@ -31,7 +31,7 @@ description: "Task list for completing the 001 core flow"
 
 ## Phase 1: Setup
 
-- [ ] T001 Record the baseline: run `npm test` (expect 40 of 40 to pass) and `npm run test:e2e` (expect exactly 4 failures: "001:US5 add a task from the input", "001:FR-008 filter All, Active, Completed", "001:FR-009 empty state when a filter has no tasks" and "001:FR-010 persist, reload, tasks remain"). Create `e2e/core-flow-005.spec.js` importing `{ test, expect }` from `./fixtures.js` with a `beforeEach` that runs `localStorage.clear()` via `page.addInitScript` only on the first navigation. Use a `sessionStorage` flag so a test's own `page.reload()` keeps its saved state. Then add `page.goto('/')`
+- [ ] T001 Record the baseline: run `npm test` (expect 40 of 40 to pass) and `npm run test:e2e` (expect exactly 4 failures: "001:US5 add a task from the input", "001:FR-008 filter All, Active, Completed", "001:FR-009 empty state when a filter has no tasks" and "001:FR-010 persist, reload, tasks remain"). Create `e2e/core-flow-005.spec.js` importing `{ test, expect }` from `./fixtures.js` with a `beforeEach` that only calls `page.goto('/')`. Playwright gives every test a fresh browser context, so `localStorage` starts empty and needs no clearing (analyze S1)
 
 ---
 
@@ -103,14 +103,19 @@ description: "Task list for completing the 001 core flow"
 - [ ] T012 [P] [US2] Add to `e2e/core-flow-005.spec.js`:
   - `005:FR-005 checking off under Active hides the task immediately`;
   - `005:FR-005 adding under Completed adds it to Active and announces it`: Completed is selected and you add "X". `#app-status` has `role="status"` and the text "Task added to Active", "X" is not visible, and after choosing Active, "X" is visible;
-  - `005:FR-006 selected filter is exposed with aria-pressed`.
+  - `005:FR-006 selected filter is exposed with aria-pressed`;
+  - `005:SC-003 keyboard-only: add, check off, and find under Completed within 10 seconds` (analyze G2). It uses only `page.keyboard` (type, Enter, Tab or Shift+Tab, Space) after focusing `#task-input`. It measures the elapsed time with `Date.now()`, asserts that the new task is visible under Completed, and that the time is under 10000 ms.
 
   Confirm they fail
 
 ### Implementation for User Story 2
 
 - [ ] T013 [US2] In `logic.js`, export `filterTasks(tasks, filter)` per data-model "Filter": `'all'` returns everything, `'active'` returns `!completed`, `'completed'` returns `completed`, and anything else is treated as `'all'`. Make sure T011 passes
-- [ ] T014 [US2] In `index.html`, add `<p id="app-status" class="app-status" role="status" data-spec="005:FR-010"></p>` inside `footer.meta-row`, between `#save-state` and the status badge. Add `005:FR-005` to the `data-spec` of the three `.filter-btn`s. In `styles.css`, add `.app-status` (caption size, `--text-secondary`, `margin: 0`, `min-height` equal to the caption line height so the layout doesn't jump)
+- [ ] T014 [US2] In `index.html`, wrap `#save-state` in `<div class="meta-actions">` inside `footer.meta-row` and add `<p id="app-status" class="app-status" role="status" data-spec="005:FR-005 005:FR-010"></p>` after it in the same wrapper, so the footer keeps two items (analyze L1, I1). Add `005:FR-005` to the `data-spec` of the three `.filter-btn`s. In `styles.css`:
+  - add `.meta-actions` (`display: flex`, `align-items: center`, `gap: var(--space-3)`, `flex-wrap: wrap`);
+  - add `.app-status` (caption size, `--text-secondary`, `margin: 0`).
+
+  Make sure `design.test.js` (which matches `#save-state`'s classes) still passes
 - [ ] T015 [US2] In `app.js`:
   - in the existing filter branch of the click handler (T030 from 003), also set `currentFilter` to `all`, `active` or `completed` (from `dataTarget`), then call `refresh()`;
   - `renderTaskList()` iterates over `filterTasks(taskState, currentFilter)` instead of `taskState`;
@@ -133,14 +138,15 @@ description: "Task list for completing the 001 core flow"
 - [ ] T017 [P] [US3] Add `emptyStateText(filter, totalCount)` tests to `core-flow.test.js`. Each case returns exactly the heading and text from the data-model table:
   - `('all', 0)` gives "No tasks yet" / "Start by adding the first item to your spec-driven workflow.";
   - `('active', 2)` gives "No active tasks" / "Everything is done. Add a new task to keep going.";
-  - `('completed', 2)` gives "No completed tasks" / "Check off a task to see it here.".
+  - `('completed', 2)` gives "No completed tasks" / "Check off a task to see it here.";
+  - `('active', 0)` and `('completed', 0)` give "No tasks yet" with the 'all' text (analyze A1).
 
   Confirm they fail
 - [ ] T018 [P] [US3] Add to `e2e/core-flow-005.spec.js`: `005:FR-007 empty state shows filter-specific text and hides the list` (Active with every task done: heading "No active tasks", `#task-list` hidden) and `005:FR-007 empty state disappears when a task matches again` (un-check a task under Completed until the list is empty, then choose Active). Confirm they fail
 
 ### Implementation for User Story 3
 
-- [ ] T019 [US3] In `logic.js`, export `emptyStateText(filter, totalCount)`, returning `{ heading, text }` per the data-model table. Make sure T017 passes
+- [ ] T019 [US3] In `logic.js`, export `emptyStateText(filter, totalCount)`, returning `{ heading, text }` per the data-model table, including the rule "When `totalCount === 0` … the heading is always 'No tasks yet'". Make sure T017 passes
 - [ ] T020 [US3] In `app.js`, at the end of `renderTaskList()`: when the filtered list is empty, set `taskListEl.hidden = true`, `emptyStateEl.hidden = false` and fill its `h3` and `p` with `textContent` from `emptyStateText(currentFilter, taskState.length)`; otherwise do the reverse. In `index.html`, add `005:FR-007` to `#empty-state`'s `data-spec`. Add `// T020`
 - [ ] T021 [US3] Run the full suite. The 004 test "001:FR-009 empty state" and the T017 and T018 tests pass
 
@@ -158,19 +164,21 @@ description: "Task list for completing the 001 core flow"
   - `'005:FR-008 serializeState writes version 1'`;
   - `'005:FR-008 parseState round-trips serializeState'`;
   - `'005:FR-009 parseState falls back'`, one case per data-model rule: `null`, `'{broken'`, `{version:2,…}`, `{version:1,tasks:{}}`, and a task missing a string `id`, a string `title` or a boolean `completed`. Each returns the fallback array;
-  - `'005:FR-009 missing optional fields become empty strings'`.
+  - `'005:FR-009 missing optional fields become empty strings'`;
+  - `'005:FR-011 a blank stored title is repaired to Untitled task'`: a stored task with title `'  '` is loaded with title `Untitled task`, and the other tasks are unchanged (analyze U1).
 
   Confirm they fail
 - [ ] T023 [P] [US4] Add to `e2e/core-flow-005.spec.js`:
   - `005:FR-008 add, check off and edit survive a reload` (no Persist click);
   - `005:FR-009 corrupt stored state falls back to the example tasks`: `addInitScript` sets the key to `'{broken'`, and after load the two example titles are visible;
-  - `005:FR-010 Persist announces "Demo state saved"`.
+  - `005:FR-010 Persist announces "Demo state saved"`;
+  - `005:FR-008 the demo keeps working when storage is blocked` (analyze G3): `addInitScript` replaces `Storage.prototype.setItem` and `getItem` with functions that throw. The example tasks load, adding a task works, filtering works, and the page has no uncaught errors (`page.on('pageerror')` collects none).
 
   Confirm they fail
 
 ### Implementation for User Story 4
 
-- [ ] T024 [US4] In `logic.js`, export `STORAGE_KEY = 'spec-driven-todo-demo'`, `serializeState(tasks)` (JSON with `{ version: 1, tasks }`) and `parseState(raw, fallbackTasks)`. `parseState` implements every "Rejected as a whole" rule from data-model "DemoState" verbatim, and makes "Optional string fields that are missing or not strings become `''`". It returns a fresh copy of the fallback. Make sure T022 passes
+- [ ] T024 [US4] In `logic.js`, export `STORAGE_KEY = 'spec-driven-todo-demo'`, `serializeState(tasks)` (JSON with `{ version: 1, tasks }`) and `parseState(raw, fallbackTasks)`. `parseState` implements every "Rejected as a whole" rule from data-model "DemoState" verbatim, and makes "Optional string fields that are missing or not strings become `''`". It also applies "Repaired, not rejected: a task whose `title` is empty after trimming gets the title `Untitled task`". It returns a fresh copy of the fallback. Make sure T022 passes
 - [ ] T025 [US4] In `app.js`, rename the inline `taskState` literal to `exampleTasks`, and initialise `const taskState = parseState(readStorage(), exampleTasks)`. Add `readStorage()` and `writeStorage(value)`, each wrapping `localStorage` in `try/catch` and returning `null` or doing nothing on error (spec edge case "Opslag niet beschikbaar"). `refresh()` now also calls `writeStorage(serializeState(taskState))`. Keep `selectedTaskId` pointing at `taskState[0]?.id`. Add `// T025`
 - [ ] T026 [US4] In `app.js`, add to the click handler for `dataTarget === 'save-state'`: `writeStorage(serializeState(taskState))`, then `showStatus('Demo state saved')`. Leave the existing `renderTrace('save-state')` call as it is. In `index.html`, add `005:FR-010` to `#save-state`'s `data-spec`. Add `// T026`
 - [ ] T027 [US4] Run the full suite. All 13 original browser tests and every 005 e2e test pass. `npm test`, `lint`, `lint:security` and `format:check` are clean

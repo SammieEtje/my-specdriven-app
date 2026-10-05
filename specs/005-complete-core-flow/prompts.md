@@ -30,3 +30,18 @@
 - Result: 32 tasks, with tests first per story.
 - Acceptance: the four red 004 core-flow tests turn green, one per story.
 - T031 (push and PR) and T032 (retarget and merge into 004) need owner confirmation.
+
+## Phase: analyze
+
+- Date: 2026-10-05
+- Trigger: `/speckit-analyze`, then remediation on request
+- Findings: 0 CRITICAL, 1 HIGH, 3 MEDIUM and 4 LOW.
+- Remediation:
+  - G1: FR-013 narrowed to `data-spec` tokens (the owner can still choose a new trace entry instead).
+  - U1: a blank stored title is repaired to "Untitled task" (data-model, T022, T024).
+  - G2: a keyboard-only test for SC-003 (T012).
+  - G3: a storage-blocked test (T023).
+  - A1: "No tasks yet" whenever the total is 0 (T017, T019).
+  - I1: FR-005 now names the "Task added to Active" notice; `#app-status` carries `005:FR-005`.
+  - S1: no storage clearing in the e2e setup.
+  - L1: a `.meta-actions` wrapper in the footer.

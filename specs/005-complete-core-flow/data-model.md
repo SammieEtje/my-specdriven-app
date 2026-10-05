@@ -28,10 +28,13 @@
   - `tasks` is not an array;
   - any entry lacks a string `id`, a string `title` or a boolean `completed`.
 - Optional string fields that are missing or not strings become `''`.
+- **Repaired, not rejected**: a task whose `title` is empty after trimming gets the title `Untitled task`. This can happen when the page is reloaded while a title is cleared in the dialog, because every edit is saved (analyze U1).
 
 ## Filter (new, in memory only)
 
 `'all' | 'active' | 'completed'`. It starts as `'all'` and is not persisted.
+
+When `totalCount === 0` (no tasks at all), the heading is always "No tasks yet" with the 'all' text, whatever the filter (analyze A1). Otherwise:
 
 | Filter | Visible tasks | Empty-state heading | Empty-state text |
 |--------|---------------|--------------------|------------------|
