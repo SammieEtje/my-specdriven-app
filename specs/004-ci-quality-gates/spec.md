@@ -111,7 +111,7 @@ Als bijdrager wil ik in de pull request in één oogopslag zien welke controle f
 - **FR-011**: Het systeem MOET de volledige kernflow uit feature 001 in de browser doorlopen (zie US3, scenario 3) en falen bij elke stap zonder het verwachte resultaat. Bekende gaten worden niet uitgezonderd.
 - **FR-012**: Het systeem MOET per categorie (code, beveiliging, bruikbaarheid) een aparte status in de pull request tonen, met per bevinding bestand, regel en reden.
 - **FR-013**: Een merge naar `main` MOET geblokkeerd zijn zolang niet alle drie de categorieën (code, beveiliging en bruikbaarheid) geslaagd zijn.
-- **FR-014**: De controles MOGEN alleen leesrechten op de code hebben. Pull requests uit forks MOGEN GEEN toegang krijgen tot geheimen van de repository.
+- **FR-014**: De controles MOGEN alleen leesrechten op de code hebben. Alleen de beveiligingscontrole mag meldingen van de statische analyse publiceren. Pull requests uit forks MOGEN GEEN toegang krijgen tot geheimen van de repository.
 - **FR-015**: Elke controle MOET een tijdslimiet hebben en bij overschrijding of bij een onbereikbare externe bron falen met een duidelijke oorzaak.
 - **FR-016**: Een uitzondering op een bevinding MOET in de repository worden vastgelegd met een reden, zodat hij in review zichtbaar is.
 - **FR-017**: De controles MOGEN GEEN nieuwe runtime-afhankelijkheid aan de demo toevoegen. Hulpmiddelen voor de controles zelf zijn alleen ontwikkelafhankelijkheden (constitution I).
@@ -131,7 +131,7 @@ Als bijdrager wil ik in de pull request in één oogopslag zien welke controle f
 - **SC-003**: Elk van de vijf bewust ingebrachte problemen uit de onafhankelijke tests (falende test, onbekend `data-spec`-ID, nep-geheim, externe tracker, verwijderd veldlabel) wordt gedetecteerd en laat de bijbehorende controle falen.
 - **SC-004**: Code en beveiliging geven 0 vals-positieve fouten op de huidige code. De bruikbaarheidscontrole faalt op de huidige code op precies de vijf bekende gaten uit feature 001 en op niets anders; na het herstel daarvan slaagt een pull request zonder problemen voor alle controles.
 - **SC-005**: Een bijdrager kan uit de statusmelding in de pull request binnen 1 minuut bepalen welke controle faalde en in welk bestand het probleem zit.
-- **SC-006**: Geen enkele controle heeft schrijfrechten op de repository of toegang tot geheimen bij een pull request uit een fork.
+- **SC-006**: Geen enkele controle heeft schrijfrechten op code, instellingen of geheimen van de repository, en een pull request uit een fork krijgt geen toegang tot geheimen. De enige schrijfbevoegdheid is het publiceren van meldingen van de statische analyse in de beveiligingscontrole.
 
 ## Assumptions
 

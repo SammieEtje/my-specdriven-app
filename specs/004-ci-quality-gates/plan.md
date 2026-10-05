@@ -58,7 +58,7 @@ spec files, plus config files and a one-time formatting baseline.
 | Principle | Status | Notes |
 |-----------|--------|-------|
 | I. Eenvoud boven alles | Pass with note | No runtime dependency and no backend. Eight dev dependencies are justified per tool in R3 to R5 and R12, and recorded in Complexity Tracking. |
-| II. Elke requirement is testbaar | Pass | FR-001, FR-012, FR-014 and FR-015 are covered by `workflow.test.js`. FR-004 by `trace.test.js`, FR-008 by `privacy.test.js`, FR-009 to FR-011 by Playwright. FR-002, FR-003, FR-005 to FR-007, FR-013 and FR-016 are proven by the seeded-violation scenarios (SC-003). This adopts Playwright as the constitution prescribes, which closes part of the 003 deviation. |
+| II. Elke requirement is testbaar | Pass | FR-001 to FR-003, FR-005 to FR-007, FR-012, FR-014 and FR-015 are covered by `workflow.test.js` (triggers, permissions, timeouts, and that each check step exists in its job). FR-016 by `e2e/a11y-exceptions.test.js` plus the `require-description` lint rule. FR-004 by `trace.test.js`, FR-008 by `privacy.test.js`, FR-009 to FR-011 by Playwright. The seeded-violation scenarios (SC-003) prove the behaviour end to end, and FR-013 is verified with `gh api`. This adopts Playwright as the constitution prescribes, which closes part of the 003 deviation. |
 | III. Traceerbaarheid | Pass | No new UI elements. The workflow and tests carry `T0xx` comments. Each phase ends with a commit, a `004-<phase>` tag and a `prompts.md` entry. The new trace check automates the constitution's "trace-controle". |
 | IV. Toegankelijk | Pass | The usability job enforces WCAG 2.1 AA (axe) and keyboard focus on every PR. |
 | V. Gebruikersdata blijft lokaal | Pass | The static and runtime privacy checks enforce this principle. CI handles code only, never user data. Fixing the XSS (R6) also protects local data. |
@@ -98,7 +98,8 @@ e2e/
 ├── fixtures.js                  # external-request guard (constitution V)
 └── a11y-exceptions.js           # recorded axe exceptions (FR-016), empty
 scripts/
-└── eslint-github-formatter.js   # ::error annotations (FR-012)
+├── eslint-github-formatter.js   # ::error annotations (FR-012)
+└── lint.js                      # picks the CI formatter when CI is set
 eslint.config.js                 # code rules + eslint-comments/require-description
 eslint.security.config.js        # no-unsanitized with html tagged template
 .prettierrc.json, .prettierignore

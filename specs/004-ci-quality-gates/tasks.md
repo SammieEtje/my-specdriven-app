@@ -56,6 +56,12 @@ description: "Task list for the pull-request quality gate"
   - every job has `timeout-minutes: 10`, and `continue-on-error` is absent (FR-015)
   - every `uses:` value matches `/@[0-9a-f]{40}\b/` (R2)
   - every `actions/checkout` step sets `persist-credentials: false`
+  - the check steps exist in the right job (constitution II, covering FR-002, FR-003 and FR-005 to FR-007):
+    - `code`: `npm test`, `npm run lint` and `npm run format:check`;
+    - `security`: a gitleaks run containing `--redact`, `npm audit --audit-level=high`, `dependency-review-action` with `fail-on-severity: high`, `npm run lint:security`, `node --test privacy.test.js`, and `codeql-action/init` with `config-file: ./.github/codeql/codeql-config.yml` (whose file contains `security-extended`);
+    - `usability`: `npm run test:e2e`.
+
+    Write the step assertions per job by slicing the file text between the `code:`, `security:` and `usability:` job keys. Steps added by later tasks (T012, T020, T027) make these assertions pass in turn
 
   Run it and confirm it fails, because the file doesn't exist yet
 - [ ] T008 Create `.github/workflows/quality-gate.yml` with `name: Quality gate`, the triggers from contract §1, workflow-level `permissions: contents: read` and `concurrency: { group: quality-gate-${{ github.event.pull_request.number || github.ref }}, cancel-in-progress: true }`. Add three jobs `code`, `security` and `usability`, each on `ubuntu-latest` with `timeout-minutes: 10`, each starting with `actions/checkout` (`persist-credentials: false`) and `actions/setup-node` (`node-version: 24`, `cache: npm`) followed by `npm ci`. Pin both actions by SHA as the conventions require. Run `npm test` and make sure T007 passes
@@ -132,9 +138,10 @@ description: "Task list for the pull-request quality gate"
   - "Dependency audit": `npm audit --audit-level=high`;
   - "Dependency review": `actions/dependency-review-action` with `fail-on-severity: high` and `if: github.event_name == 'pull_request'`;
   - "Unsafe HTML": `npm run lint:security` with `env: CI: true`;
+  - "Privacy": `node --test privacy.test.js` (FR-008 belongs to the security category, spec US2/AC4);
   - "CodeQL": `github/codeql-action/init` with `languages: javascript-typescript` and `config-file: ./.github/codeql/codeql-config.yml`, then `github/codeql-action/analyze`.
 
-  The privacy check (`privacy.test.js`) runs inside `npm test` in the `code` job and is also referenced in the `security` job summary (T031). Pin every action and the image by SHA or digest. Add `# T020`. Run `npm test` so `workflow.test.js` still passes
+  `privacy.test.js` also runs inside `npm test` in the `code` job, so a contributor sees it locally. The `security` job runs it on its own, so a privacy breach turns `security` red (quickstart seeded violation #4). Pin every action and the image by SHA or digest. Add `# T020`. Run `npm test` so `workflow.test.js` still passes
 
 **Checkpoint**: Security checks are in place locally (`npm run lint:security`, `privacy.test.js`, `npm audit`). The XSS is fixed.
 
@@ -151,7 +158,7 @@ description: "Task list for the pull-request quality gate"
 > In this story the tests are the deliverable. Implementation is the CI wiring (T027).
 
 - [ ] T021 [P] [US3] Create `e2e/fixtures.js`, which exports `test` (extended from `@playwright/test`) and `expect`. An auto fixture routes every request whose origin isn't `http://localhost:8000` to `route.abort()`, records the URLs, and after each test asserts that the list is empty, with the message `constitution V: external request(s) attempted: …` (FR-008 runtime, SC-005 of 003)
-- [ ] T022 [P] [US3] Create `e2e/a11y-exceptions.js`, exporting a default empty array of `{ rule, selector, reason }`, and a named `loadExceptions()` that throws when any entry has an empty `reason` (FR-016, data-model "Exception")
+- [ ] T022 [P] [US3] Create `e2e/a11y-exceptions.js`, exporting a default empty array of `{ rule, selector, reason }`, and a named `loadExceptions(list = defaultList)` that throws when any entry has an empty or whitespace-only `reason` (FR-016, data-model "Exception"). Add `e2e/a11y-exceptions.test.js` (node:test, so it runs in `npm test`). It asserts that `loadExceptions([])` returns `[]`, that `loadExceptions([{ rule: 'label', selector: '#x', reason: 'documented' }])` returns the entry, and that `loadExceptions([{ rule: 'label', selector: '#x', reason: ' ' }])` throws
 - [ ] T023 [US3] Create `e2e/a11y.spec.js` (FR-009), importing from `./fixtures.js`. Three tests, titled `004:FR-009 initial page has no serious/critical WCAG 2.1 AA violations`, `004:FR-009 open task dialog …` and `004:FR-009 after filtering …`. Each builds `new AxeBuilder({ page }).withTags(['wcag2a','wcag2aa','wcag21a','wcag21aa'])`, excludes the selectors from `loadExceptions()` (disabling those rule ids), and asserts that no violation has impact `serious` or `critical`. The failure message lists rule id, impact, the first target selector and the help URL
 - [ ] T024 [P] [US3] Create `e2e/keyboard.spec.js` (FR-010, constitution IV) with the test `004:FR-010 every control receives visible focus`. It presses Tab from the top until focus returns to `body` or 40 presses pass. For each focused element it records the tag, `data-target` and the computed `outlineStyle` and `outlineWidth`, and asserts that the style isn't `none` and the width is at least `2px`. It also asserts that every element matching `button, input, textarea, [tabindex="0"]` outside the closed dialog was reached at least once
 - [ ] T025 [P] [US3] Create `e2e/core-flow.spec.js` (FR-011) with one test per row of contract §6, using the titles given there. Each test asserts the user-visible result 001 promises:
@@ -181,7 +188,7 @@ description: "Task list for the pull-request quality gate"
 
 **Independent Test**: Make one check fail. The job summary lists the failed step and the annotations point at file and line.
 
-- [ ] T028 [US4] Add a final step "Summary" with `if: always()` to each of the three jobs in `.github/workflows/quality-gate.yml`. It appends a Markdown table to `$GITHUB_STEP_SUMMARY` with one row per step (step name, `${{ steps.<id>.outcome }}`, and what to run locally from contract §4). Give every step an `id`. In the `security` summary, add a line pointing to `privacy.test.js` in the `code` job (T020). Add `# T028`
+- [ ] T028 [US4] Add a final step "Summary" with `if: always()` to each of the three jobs in `.github/workflows/quality-gate.yml`. It appends a Markdown table to `$GITHUB_STEP_SUMMARY` with one row per step (step name, `${{ steps.<id>.outcome }}`, and what to run locally from contract §4). Give every step an `id`. The `security` summary includes the "Privacy" step row (T020). Add `# T028`
 - [ ] T029 [US4] In the `usability` job, add "Upload report" (`actions/upload-artifact`, pinned, `if: failure()`, `path: playwright-report/`, `retention-days: 7`). Check that `playwright.config.js` (T005) already gives `github` reporter annotations in CI
 - [ ] T030 [US4] Extend `workflow.test.js`: every job ends with a step whose `if:` is `always()` and that writes to `GITHUB_STEP_SUMMARY`, and the `usability` job has an upload step with `if: failure()`. Run `npm test`
 
@@ -192,13 +199,13 @@ description: "Task list for the pull-request quality gate"
 **Purpose**: End-to-end validation on GitHub, repository settings, and bookkeeping
 
 - [ ] T031 Run the full local list from `quickstart.md` §1 and record the actual results under a new "Results" heading in `specs/004-ci-quality-gates/quickstart.md`
-- [ ] T032 Update the 003 trace text that claims behaviour which doesn't exist: in `logic.js`, `spec-01.phaseMap.implement` says the button "appends it to the in-memory task list". Leave it unchanged (001 owns it) but add a comment `// Known 001 gap, see 004 core-flow test "add a task"` so the trace and the failing test point at each other. Run `npm test`
+- [ ] T032 Annotate the 001 trace text that claims behaviour which doesn't exist: in `logic.js`, `spec-01.phaseMap.implement` says the button "appends it to the in-memory task list". Leave it unchanged (001 owns it) but add a comment `// Known 001 gap, see 004 core-flow test "add a task"` so the trace and the failing test point at each other. Run `npm test`
 - [ ] T033 Append an `## Phase: implement` entry to `specs/004-ci-quality-gates/prompts.md`, commit (with the formatting baseline from T009 as its own earlier commit) and tag `004-implement`
 - [ ] T034 **After confirmation**: push `004-ci-quality-gates` and its tags, then open a PR to `main` with `gh pr create`. Confirm in the PR that the three checks `code`, `security` and `usability` appear, that `code` and `security` are green, and that `usability` is red on exactly the five known 001 tests. Check that the slowest job finishes within 10 minutes (SC-002). Record the run URL in `quickstart.md`
-- [ ] T035 **After confirmation**: run seeded violations #1 to #5 from `quickstart.md` §2 as throwaway PRs from branches off `004-ci-quality-gates`. Record for each the red check and the annotation in `quickstart.md` (SC-003), then close each PR and delete its branch
-- [ ] T036 **After explicit confirmation, step by step**: apply the repository settings from `quickstart.md` §4 in the order it gives:
+- [ ] T035 **After confirmation**: run seeded violations #1 to #5 from `quickstart.md` §2 as throwaway PRs from branches off `004-ci-quality-gates`. Record for each the red check and the annotation in `quickstart.md` (SC-003), then close each PR and delete its branch. For SC-006 and FR-014, open the "Set up job" section of one run's log and record that it lists `GITHUB_TOKEN Permissions` with `Contents: read`, plus `SecurityEvents: write` in the `security` job only. GitHub doesn't allow forking your own repository, so a real fork PR needs a second account and is optional. The static guarantees (no `pull_request_target`, read-only token) are covered by `workflow.test.js` (T007)
+- [ ] T036 **Approved by the owner on 2026-10-05; blocked until the 001 gaps are fixed** (analyze C1, constitution "a feature is only done when all tests pass"). Prerequisite: the five 001 gaps are fixed in their own branch and PR, so `usability` is green on the 004 PR (rebased on that fix). Then, in this order:
   1. make the repository public;
-  2. decide with the owner whether PR #1 and this feature's PR merge before protection;
+  2. merge PR #1 (003), then the 001 fix, then this feature's PR into `main`, each with all three checks green;
   3. set branch protection on `main` requiring `code`, `security` and `usability`, with up-to-date branches;
   4. enable Dependabot alerts and secret scanning with push protection.
 
@@ -216,7 +223,8 @@ description: "Task list for the pull-request quality gate"
 - **US2 (Phase 4)**: after Phase 2. T016 → T017 → T018 in order. T014, T015 and T019 can run in parallel.
 - **US3 (Phase 5)**: after Phase 2. T021, T022, T024 and T025 can run in parallel; T023 needs T022. If US2 runs in parallel, T026 needs T017, because the XSS fix changes rendering.
 - **US4 (Phase 6)**: after US1 to US3, because it adds steps after theirs in the same workflow file.
-- **Polish (Phase 7)**: after everything. T034 to T036 also need the owner's confirmation.
+- **Polish (Phase 7)**: after everything. The owner has confirmed T034 to T036. T036 also waits for the separate 001 fix (analyze C1).
+- **Outside this feature**: fixing the five 001 gaps (add, filters, empty state, Close-button focus, persist) is its own spec-driven follow-up on `main`. It must land before 004 counts as done.
 
 ### Workflow file coordination
 
@@ -261,6 +269,6 @@ Task: "Create e2e/core-flow.spec.js"                         # T025
 
 ## Notes
 
-- Expected end state: `code` and `security` are green and `usability` is red on exactly the five 001 gaps. Merges stay blocked after T036 until 001 is fixed (clarification Q1, R11).
+- Expected state after T034: `code` and `security` green, `usability` red on exactly the five 001 gaps. The feature is only done (constitution) once the 001 fix makes `usability` green. After that, T036 merges and protects `main`.
 - `.claude/skills/polderworks-design/` and the 001 and 003 specs are never edited by this feature.
 - Commit after each phase. The formatting baseline (T009) is its own commit.

@@ -36,3 +36,20 @@
 - Trigger: `/speckit-tasks`
 - Result: 36 tasks across Setup, Foundational, US1 to US4 and Polish, with tests first.
 - Outward-facing steps need explicit owner confirmation: T034 (push and PR), T035 (seeded-violation PRs) and T036 (public repository and branch protection).
+
+## Phase: analyze
+
+- Date: 2026-10-05
+- Branch: `004-ci-quality-gates`
+- Trigger: `/speckit-analyze`, then remediation on request
+- Findings: 2 CRITICAL, 1 HIGH, 3 MEDIUM and 4 LOW.
+  - C1: the constitution says "a feature is only done when all tests pass", but 004 shipped red.
+  - C2: six FRs had no automated test.
+  - I1: the privacy check ran in the wrong job.
+- Remediation:
+  - T007 now asserts the check steps per job.
+  - T022 adds `e2e/a11y-exceptions.test.js`.
+  - T020 adds a Privacy step to `security`.
+  - SC-006 and FR-014 now name the CodeQL alert upload as the only write permission.
+  - The fork test is replaced by a token-permissions log check, because GitHub doesn't allow forking your own repository.
+  - C1 (owner decision): fix the 001 gaps first. T036 waits for that fix; then PR #1, the 001 fix and 004 merge, and protection goes on.

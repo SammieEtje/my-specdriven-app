@@ -167,9 +167,10 @@ default branch was `003-adopt-polderworks-design` and has been set to `main`.
   enabled at the same time.
 - **Rationale**: Without branch protection the gate only advises. On the free plan, enforcement
   needs a public repository.
-- **Consequence**: Because the usability check tests the full 001 flow (clarification Q1), `main`
-  accepts no merges until the five 001 gaps are fixed. That includes PR #1 if it is still open
-  when protection is switched on. The quickstart describes the order.
+- **Consequence and order** (analyze C1, owner decision 2026-10-05): The usability check tests the full
+  001 flow (clarification Q1), and the constitution only calls a feature done when all tests pass.
+  So 004 is built and its PR opened, the five 001 gaps are fixed in their own branch, and only
+  then are PR #1, the 001 fix and 004 merged and protection switched on.
 
 ## R12. Node version and dependencies (constitution I)
 
