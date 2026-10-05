@@ -9,3 +9,16 @@
 - Clarifications:
   - Auto-save on every change; the button saves explicitly with a confirmation.
   - Deleting tasks is out of scope.
+
+## Phase: plan
+
+- Date: 2026-10-05
+- Trigger: `/speckit-plan`
+- Design:
+  - Pure functions in `logic.js` with unit tests.
+  - A native form for click and Enter, with the error linked by `aria-describedby`.
+  - Filtered render plus an empty state.
+  - A versioned `localStorage` state with auto-save and a fallback.
+  - One `role="status"` live region, and the dialog title restored on close.
+- Branches: stacked on `004-ci-quality-gates`. The PR first targets `main` for CI feedback, then is retargeted to 004 and merged; then #1 and #2 merge into `main` (R9).
+- Observed: the spec-03 trace `elementIds` don't match the checkbox `data-target`s (001 defect, out of scope).
