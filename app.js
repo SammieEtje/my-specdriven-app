@@ -39,11 +39,12 @@ function renderPhaseList(trace) {
   phaseListEl.innerHTML = '';
 
   trace.phases.forEach((phase) => {
+    // T038 The implement phase produced the on-screen element, so it gets the Callout left rule
     const item = document.createElement('li');
-    item.className = 'phase-item';
+    item.className = phase.phase === 'implement' ? 'phase-item callout' : 'phase-item';
     item.innerHTML = `
-      <strong>${phase.phase}</strong>
-      <div>${phase.decision}</div>
+      <strong class="phase-name">${phase.phase}</strong>
+      <div class="phase-decision">${phase.decision}</div>
     `;
     phaseListEl.appendChild(item);
   });
@@ -71,9 +72,8 @@ function renderTrace(target) {
 
   document.querySelectorAll('.feature-target').forEach((element) => {
     const isSelected = element.dataset.target === target;
+    // T007 The traced outline comes from .feature-target.active in styles.css (R5)
     element.classList.toggle('active', isSelected);
-    element.style.outline = isSelected ? '2px solid rgba(124, 58, 237, 0.8)' : '';
-    element.style.outlineOffset = isSelected ? '3px' : '';
   });
 }
 
@@ -98,21 +98,24 @@ function closeTaskModal() {
 }
 
 function renderTaskList() {
+  // T027 Open button uses the secondary Button pattern
+  // T045 Task checkbox carries its 003:FR-006 trace token
+  // T018 Completed class and status text, Tag pattern for the task tag
   taskListEl.innerHTML = taskState
     .map((task) => {
       const isSelected = task.id === selectedTaskId;
       return `
-        <li class="task-card ${isSelected ? 'selected' : ''}">
+        <li class="task-card ${isSelected ? 'selected' : ''} ${task.completed ? 'completed' : ''}" data-spec="003:FR-003">
           <label class="task-main">
-            <input class="feature-target" data-target="task-toggle-${task.id}" type="checkbox" ${task.completed ? 'checked' : ''} />
+            <input class="feature-target" data-target="task-toggle-${task.id}" data-spec="003:FR-006" type="checkbox" ${task.completed ? 'checked' : ''} />
             <span class="task-content">
-              <span>${task.title}</span>
-              <span class="meta">${task.owner} · ${task.tag}</span>
+              <span class="task-title">${task.title}</span>
+              <span class="meta">${task.owner} · ${task.tag}${task.completed ? ' · Completed' : ''}</span>
             </span>
           </label>
           <div class="task-meta-actions">
-            <span class="task-pill">${task.tag}</span>
-            <button class="task-open-button feature-target ${isSelected ? 'selected' : ''}" data-target="task-open" data-task-id="${task.id}">Open</button>
+            <span class="tag" data-spec="003:FR-003">${task.tag}</span>
+            <button class="task-open-button feature-target btn btn-secondary ${isSelected ? 'selected' : ''}" data-target="task-open" data-task-id="${task.id}" data-spec="003:FR-005">Open</button>
           </div>
         </li>
       `;
@@ -167,6 +170,13 @@ document.addEventListener('click', (event) => {
     return;
   }
 
+  // T030 Reflect the selected filter for assistive technology; filtering itself is unchanged
+  if (dataTarget && dataTarget.startsWith('filter-')) {
+    document.querySelectorAll('.filter-btn').forEach((button) => {
+      button.setAttribute('aria-pressed', String(button === target));
+    });
+  }
+
   if (dataTarget === 'task-modal') {
     renderTrace(dataTarget);
     return;
@@ -187,6 +197,16 @@ taskModalEl.addEventListener('keydown', (event) => {
     event.preventDefault();
     closeTaskModal();
   }
+});
+
+// T021 Non-native trace targets (the header) respond to Enter and Space, like a click
+document.addEventListener('keydown', (event) => {
+  if (event.key !== 'Enter' && event.key !== ' ') return;
+  const target = event.target.closest('.feature-target[tabindex="0"]');
+  if (!target || target !== event.target) return;
+
+  event.preventDefault();
+  renderTrace(target.dataset.target);
 });
 
 document.addEventListener('input', (event) => {

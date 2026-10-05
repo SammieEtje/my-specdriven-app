@@ -1,0 +1,87 @@
+/* Polderworks Design System — Colour tokens
+   Base palette drawn from the two brand metaphors (polder / pilot), then
+   semantic aliases layered on top so components never reference a base hex
+   directly. Light theme is default; dark theme (terminals, GitHub, CLI
+   surfaces) overrides via [data-theme="dark"]. */
+
+:root {
+  /* Base palette */
+  --pw-navy-ink: #152A4A;        /* primary brand, headlines, masterbrand surfaces */
+  --pw-deep-water: #0A1721;      /* darkest surface — terminals, GitHub, dark theme base */
+  --pw-panel-dark: #0F2030;      /* elevated dark surface — cards/panels on dark theme */
+  --pw-ice: #EAF1F9;             /* light surface, reversed text on dark */
+  --pw-app-bg: #DDE6F1;          /* light theme page background, one step off Ice */
+  --pw-channel-teal: #2F6D7A;    /* secondary — links, water, structure */
+  --pw-teal-light: #6FB4C2;      /* channel teal, tuned for dark surfaces */
+  --pw-reclaimed-silt: #C7B9A1;  /* warm neutral — dividers, muted panels */
+  --pw-eu-gold: #E8A820;         /* accent + highlight ONLY — never body text */
+  --pw-pilot-red: #BE3A2E;       /* alerts / blockers, reserved primarily for Loods */
+  --pw-red-light: #E8695C;       /* pilot red, tuned for dark surfaces */
+  --pw-slate: #45566E;           /* secondary text on light surfaces */
+  --pw-muted-cool: #9DB0C6;      /* secondary text on dark surfaces */
+  --pw-border-dark: #1B2E42;     /* hairline borders on dark panels */
+  --pw-border-navy: #35507A;     /* hairline borders on navy surfaces */
+  --pw-success-green: #1F8A5B;   /* "clear" status, light surfaces */
+  --pw-success-green-bright: #5FD19A; /* "clear" status, dark surfaces */
+  --pw-advisory-amber: #B07E10;  /* "advisory" status text on light (gold fails AA as text) */
+
+  /* Semantic — light theme (default) */
+  --surface-page: var(--pw-app-bg);
+  --surface-card: var(--pw-ice);
+  --surface-sunken: var(--pw-ice);
+  --surface-inverse: var(--pw-navy-ink);
+  --surface-overlay: var(--pw-navy-ink);
+
+  --text-primary: var(--pw-navy-ink);
+  --text-secondary: var(--pw-slate);
+  --text-inverse: var(--pw-ice);
+  --text-inverse-secondary: var(--pw-muted-cool);
+  --text-link: var(--pw-channel-teal);
+  --text-link-hover: var(--pw-navy-ink);
+  --text-on-accent: var(--pw-navy-ink);
+
+  --border-default: var(--pw-reclaimed-silt);
+  --border-strong: var(--pw-navy-ink);
+  --border-inverse: var(--pw-border-navy);
+
+  --accent-gold: var(--pw-eu-gold);
+  --accent-teal: var(--pw-channel-teal);
+
+  --status-blocker-bg: color-mix(in oklch, var(--pw-pilot-red) 12%, white);
+  --status-blocker-fg: var(--pw-pilot-red);
+  --status-advisory-bg: color-mix(in oklch, var(--pw-advisory-amber) 14%, white);
+  --status-advisory-fg: var(--pw-advisory-amber);
+  --status-clear-bg: color-mix(in oklch, var(--pw-success-green) 12%, white);
+  --status-clear-fg: var(--pw-success-green);
+
+  --focus-ring: var(--pw-channel-teal);
+}
+
+[data-theme="dark"] {
+  --surface-page: var(--pw-deep-water);
+  --surface-card: var(--pw-panel-dark);
+  --surface-sunken: var(--pw-deep-water);
+  --surface-inverse: var(--pw-ice);
+  --surface-overlay: var(--pw-panel-dark);
+
+  --text-primary: var(--pw-ice);
+  --text-secondary: var(--pw-muted-cool);
+  --text-inverse: var(--pw-navy-ink);
+  --text-inverse-secondary: var(--pw-slate);
+  --text-link: var(--pw-teal-light);
+  --text-link-hover: var(--pw-ice);
+  --text-on-accent: var(--pw-navy-ink);
+
+  --border-default: var(--pw-border-dark);
+  --border-strong: var(--pw-ice);
+  --border-inverse: var(--pw-border-navy);
+
+  --status-blocker-bg: color-mix(in oklch, var(--pw-red-light) 18%, var(--pw-deep-water));
+  --status-blocker-fg: var(--pw-red-light);
+  --status-advisory-bg: color-mix(in oklch, var(--pw-eu-gold) 18%, var(--pw-deep-water));
+  --status-advisory-fg: var(--pw-eu-gold);
+  --status-clear-bg: color-mix(in oklch, var(--pw-success-green-bright) 18%, var(--pw-deep-water));
+  --status-clear-fg: var(--pw-success-green-bright);
+
+  --focus-ring: var(--pw-teal-light);
+}

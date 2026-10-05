@@ -9,46 +9,60 @@
   <body>
     <div class="app-shell">
       <main class="demo-panel">
-        <header class="app-header">
+        <!-- T021 -->
+        <header
+          class="app-header feature-target"
+          data-target="app-header"
+          data-spec="003:FR-001 003:FR-002 003:FR-014"
+          tabindex="0"
+        >
           <div>
             <p class="eyebrow">Spec-driven demo</p>
             <h1>To-do board</h1>
           </div>
-          <span class="badge">7 specs</span>
+          <!-- T046 -->
+          <span class="badge" data-spec="003:FR-003">7 specs</span>
         </header>
 
         <section class="composer">
+          <!-- T028 -->
           <input
             id="task-input"
             class="feature-target"
+            data-spec="003:FR-006"
             data-target="task-input"
             type="text"
             value="Review onboarding checklist"
             aria-label="Add a task"
           />
-          <button id="add-task-button" class="feature-target primary" data-target="add-task-button">
+          <!-- T027 -->
+          <button id="add-task-button" class="feature-target btn btn-primary" data-target="add-task-button" data-spec="003:FR-005">
             Add task
           </button>
         </section>
 
         <nav class="filters" aria-label="Task filters">
-          <button class="feature-target filter-btn active" data-target="filter-all">All</button>
-          <button class="feature-target filter-btn" data-target="filter-active">Active</button>
-          <button class="feature-target filter-btn" data-target="filter-completed">Completed</button>
+          <!-- T030 -->
+          <button class="feature-target filter-btn" data-target="filter-all" data-spec="003:FR-006" aria-pressed="true">All</button>
+          <button class="feature-target filter-btn" data-target="filter-active" data-spec="003:FR-006" aria-pressed="false">Active</button>
+          <button class="feature-target filter-btn" data-target="filter-completed" data-spec="003:FR-006" aria-pressed="false">Completed</button>
         </nav>
 
         <section class="task-list-container">
           <ul id="task-list" class="task-list feature-target" data-target="task-list"></ul>
 
-          <div id="empty-state" class="empty-state feature-target" data-target="empty-state" hidden>
+          <!-- T019 -->
+          <div id="empty-state" class="empty-state feature-target" data-target="empty-state" data-spec="003:FR-003" hidden>
             <h3>No tasks yet</h3>
             <p>Start by adding the first item to your spec-driven workflow.</p>
           </div>
         </section>
 
         <footer class="meta-row">
-          <button id="save-state" class="feature-target ghost" data-target="save-state">Persist demo state</button>
-          <span class="live-indicator">Live trace enabled</span>
+          <!-- T027 -->
+          <button id="save-state" class="feature-target btn btn-ghost" data-target="save-state" data-spec="003:FR-005">Persist demo state</button>
+          <!-- T031 -->
+          <span class="status-badge" data-spec="003:FR-010"><span class="status-dot" aria-hidden="true"></span>Live trace enabled</span>
         </footer>
       </main>
 
@@ -57,7 +71,8 @@
           <p class="eyebrow">Decision trace</p>
           <h2 id="trace-title">Add task CTA</h2>
 
-          <div class="trace-summary">
+          <!-- T035 -->
+          <div class="trace-summary" data-spec="003:FR-002">
             <div>
               <span class="label">Feature</span>
               <strong id="trace-feature-id">spec-01</strong>
@@ -70,18 +85,21 @@
 
           <p id="trace-description" class="trace-description"></p>
 
-          <pre id="trace-object" class="trace-object"></pre>
+          <!-- T036 -->
+          <pre id="trace-object" class="trace-object" data-spec="003:FR-009"></pre>
 
-          <ol id="phase-list" class="phase-list" aria-live="polite"></ol>
+          <!-- T037 -->
+          <ol id="phase-list" class="phase-list" data-spec="003:FR-009" aria-live="polite"></ol>
         </section>
       </aside>
     </div>
 
+    <!-- T032 -->
     <dialog
       id="task-modal"
       class="task-modal feature-target"
       data-target="task-modal"
-      data-spec="001:FR-004"
+      data-spec="001:FR-004 003:FR-008"
       aria-labelledby="task-modal-title"
     >
       <div class="task-modal-panel">
@@ -92,32 +110,33 @@
           </div>
           <button
             type="button"
-            class="task-modal-close feature-target"
+            class="task-modal-close feature-target btn btn-secondary"
             data-target="task-modal-close"
-            data-spec="001:FR-012"
+            data-spec="001:FR-012 003:FR-005"
             aria-label="Close task dialog"
           >
             Close
           </button>
         </div>
 
+        <!-- T028 -->
         <div class="task-modal-fields">
           <div>
             <label for="task-title-field">Title</label>
-            <input id="task-title-field" class="feature-target" data-target="task-title-field" data-spec="001:FR-005" type="text" />
+            <input id="task-title-field" class="feature-target" data-target="task-title-field" data-spec="001:FR-005 003:FR-006" type="text" />
           </div>
           <div>
             <label for="task-description-field">Toelichting</label>
-            <textarea id="task-description-field" class="feature-target" data-target="task-description-field" data-spec="001:FR-005" rows="4"></textarea>
+            <textarea id="task-description-field" class="feature-target" data-target="task-description-field" data-spec="001:FR-005 003:FR-006" rows="4"></textarea>
           </div>
           <div class="split-fields">
             <div>
               <label for="task-tag-field">Tag</label>
-              <input id="task-tag-field" class="feature-target" data-target="task-tag-field" data-spec="001:FR-005" type="text" />
+              <input id="task-tag-field" class="feature-target" data-target="task-tag-field" data-spec="001:FR-005 003:FR-006" type="text" />
             </div>
             <div>
               <label for="task-owner-field">Eigenaar</label>
-              <input id="task-owner-field" class="feature-target" data-target="task-owner-field" data-spec="001:FR-005" type="text" />
+              <input id="task-owner-field" class="feature-target" data-target="task-owner-field" data-spec="001:FR-005 003:FR-006" type="text" />
             </div>
           </div>
         </div>
