@@ -79,8 +79,10 @@ test('T003 contrast helper matches the WCAG reference value for navy-ink on ice'
   assert.equal(contrastRatio(palette['--pw-navy-ink'], palette['--pw-ice']).toFixed(2), '12.62');
 });
 
-const NAMED_COLOURS = /\b(white|black|red|green|blue|yellow|orange|purple|pink|gray|grey|silver|navy|teal|gold|maroon|olive|lime|aqua|fuchsia|brown|violet|indigo|cyan|magenta)\b/i;
-const COLOUR_PROPERTIES = /^(color|background|background-color|border|border-(top|right|bottom|left)(-color)?|border-color|outline|outline-color|box-shadow|fill|stroke|accent-color|text-decoration-color)$/;
+const NAMED_COLOURS =
+  /\b(white|black|red|green|blue|yellow|orange|purple|pink|gray|grey|silver|navy|teal|gold|maroon|olive|lime|aqua|fuchsia|brown|violet|indigo|cyan|magenta)\b/i;
+const COLOUR_PROPERTIES =
+  /^(color|background|background-color|border|border-(top|right|bottom|left)(-color)?|border-color|outline|outline-color|box-shadow|fill|stroke|accent-color|text-decoration-color)$/;
 
 function withoutVars(value) {
   return value.replace(/var\(--[\w-]+\)/g, '');
@@ -108,7 +110,10 @@ test('FR-001 only design-system colours', () => {
 test('FR-002 IBM Plex only', () => {
   for (const { selector, property, value } of declarations(readFile('./styles.css'))) {
     if (property !== 'font-family') continue;
-    assert.ok(['var(--font-sans)', 'var(--font-mono)', 'inherit'].includes(value), `${selector} uses font-family ${value}`);
+    assert.ok(
+      ['var(--font-sans)', 'var(--font-mono)', 'inherit'].includes(value),
+      `${selector} uses font-family ${value}`
+    );
   }
   assert.doesNotMatch(readFile('./styles.css'), /\bInter\b/);
 
@@ -129,7 +134,10 @@ test('FR-003 square geometry, no gradients', () => {
 
   for (const { selector, property, value } of declarations(css)) {
     if (property === 'border-radius' && !selector.includes('status-dot')) {
-      assert.ok(['0', 'var(--radius-none)', 'var(--radius-xs)', 'var(--radius-sm)'].includes(value), `${selector} has border-radius ${value}`);
+      assert.ok(
+        ['0', 'var(--radius-none)', 'var(--radius-xs)', 'var(--radius-sm)'].includes(value),
+        `${selector} has border-radius ${value}`
+      );
       // T046 Only controls may be rounded (FR-003)
       if (/--radius-(xs|sm)/.test(value)) {
         for (const part of selector.split(',')) {
@@ -144,12 +152,16 @@ test('FR-003 square geometry, no gradients', () => {
   }
 
   // T046
-  assert.ok(dataSpecTokens(elementTag(readFile('./index.html'), 'class', 'badge')).includes('003:FR-003'), 'badge lacks 003:FR-003');
+  assert.ok(
+    dataSpecTokens(elementTag(readFile('./index.html'), 'class', 'badge')).includes('003:FR-003'),
+    'badge lacks 003:FR-003'
+  );
 });
 
 // T012
 test('FR-004 spacing and type scale', () => {
-  const spacing = /^(padding|margin|gap|row-gap|column-gap|top|right|bottom|left|inset)(-(top|right|bottom|left|inline|block))?$/;
+  const spacing =
+    /^(padding|margin|gap|row-gap|column-gap|top|right|bottom|left|inset)(-(top|right|bottom|left|inline|block))?$/;
 
   for (const { selector, property, value } of declarations(readFile('./styles.css'))) {
     if (spacing.test(property)) {
@@ -158,7 +170,10 @@ test('FR-004 spacing and type scale', () => {
         .replace(/\b(calc|auto)\b/g, '')
         .split(/[\s()*+]+/)
         .filter(Boolean);
-      assert.ok(rest.every((token) => token === '0' || token === '-1'), `${selector} { ${property}: ${value} } is off the spacing scale`);
+      assert.ok(
+        rest.every((token) => token === '0' || token === '-1'),
+        `${selector} { ${property}: ${value} } is off the spacing scale`
+      );
     }
     if (property === 'font-size') {
       assert.match(value, /^(var\(--text-[\w-]+-size\)|inherit)$/, `${selector} has font-size ${value}`);
@@ -231,13 +246,28 @@ test('FR-012 existing hooks preserved', () => {
   const html = readFile('./index.html');
   const app = readFile('./app.js');
   const targets = [
-    'task-input', 'add-task-button', 'filter-all', 'filter-active', 'filter-completed', 'task-list',
-    'empty-state', 'save-state', 'task-modal', 'task-modal-close', 'task-title-field',
-    'task-description-field', 'task-tag-field', 'task-owner-field'
+    'task-input',
+    'add-task-button',
+    'filter-all',
+    'filter-active',
+    'filter-completed',
+    'task-list',
+    'empty-state',
+    'save-state',
+    'task-modal',
+    'task-modal-close',
+    'task-title-field',
+    'task-description-field',
+    'task-tag-field',
+    'task-owner-field'
   ];
 
   for (const target of targets) {
-    assert.doesNotMatch(elementTag(html, 'data-target', target), /tabindex="-1"/, `${target} was removed from the tab order`);
+    assert.doesNotMatch(
+      elementTag(html, 'data-target', target),
+      /tabindex="-1"/,
+      `${target} was removed from the tab order`
+    );
   }
   assert.match(app, /data-target="task-toggle-\$\{task\.id\}"/);
   assert.match(app, /data-target="task-open"/);
@@ -259,11 +289,18 @@ test('FR-012 existing hooks preserved', () => {
 });
 
 function cssRule(css, selector) {
-  return cssRules(css).filter((rule) => rule.selector.split(',').map((part) => part.trim()).includes(selector));
+  return cssRules(css).filter((rule) =>
+    rule.selector
+      .split(',')
+      .map((part) => part.trim())
+      .includes(selector)
+  );
 }
 
 function cssValue(css, selector, property) {
-  const values = cssRule(css, selector).flatMap((rule) => rule.declarations.filter((d) => d.property === property).map((d) => d.value));
+  const values = cssRule(css, selector).flatMap((rule) =>
+    rule.declarations.filter((d) => d.property === property).map((d) => d.value)
+  );
   return values.at(-1);
 }
 
@@ -306,7 +343,10 @@ test('FR-006 form controls and filters', () => {
   assert.equal(underline, 'var(--border-strong)');
   assert.equal(cssValue(css, 'input[type="checkbox"]', 'accent-color'), 'var(--pw-navy-ink)');
   // T045 The task checkbox carries its 003 trace token (Constitution III)
-  assert.match(readFile('./app.js'), /<input class="feature-target" data-target="task-toggle-\$\{task\.id\}" data-spec="003:FR-006" type="checkbox"/);
+  assert.match(
+    readFile('./app.js'),
+    /<input class="feature-target" data-target="task-toggle-\$\{task\.id\}" data-spec="003:FR-006" type="checkbox"/
+  );
 });
 
 // T025
@@ -337,11 +377,17 @@ test('FR-009 code block and callout', () => {
 
   assert.equal(cssValue(css, '.trace-object', 'font-family'), 'var(--font-mono)');
   assert.equal(cssValue(css, '.trace-object', 'background'), 'var(--surface-sunken)');
-  assert.match(cssValue(css, '.trace-object', 'border') ?? '', /var\(--border-width-hairline\) solid var\(--border-default\)/);
+  assert.match(
+    cssValue(css, '.trace-object', 'border') ?? '',
+    /var\(--border-width-hairline\) solid var\(--border-default\)/
+  );
   assert.ok(['0', 'var(--radius-none)'].includes(cssValue(css, '.trace-object', 'border-radius')));
   assert.equal(cssValue(css, '.trace-object', 'overflow-x'), 'auto');
 
-  assert.match(cssValue(css, '.phase-item', 'border-bottom') ?? '', /var\(--border-width-hairline\) solid var\(--border-default\)/);
+  assert.match(
+    cssValue(css, '.phase-item', 'border-bottom') ?? '',
+    /var\(--border-width-hairline\) solid var\(--border-default\)/
+  );
   assert.ok([undefined, 'none', 'transparent'].includes(cssValue(css, '.phase-item', 'background')));
 
   assert.match(cssValue(css, '.callout', 'border-left') ?? '', /^var\(--border-width-accent\) solid /);

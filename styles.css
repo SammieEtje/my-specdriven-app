@@ -1,10 +1,10 @@
 /* T005 Design-system tokens, imported straight from the central design system (R1).
    The design system's tokens/fonts.css is deliberately not imported: it loads Google Fonts (R2). */
-@import url('./.claude/skills/polderworks-design/tokens/colors.css');
-@import url('./.claude/skills/polderworks-design/tokens/typography.css');
-@import url('./.claude/skills/polderworks-design/tokens/spacing.css');
-@import url('./.claude/skills/polderworks-design/tokens/effects.css');
-@import url('./fonts/fonts.css');
+@import url("./.claude/skills/polderworks-design/tokens/colors.css");
+@import url("./.claude/skills/polderworks-design/tokens/typography.css");
+@import url("./.claude/skills/polderworks-design/tokens/spacing.css");
+@import url("./.claude/skills/polderworks-design/tokens/effects.css");
+@import url("./fonts/fonts.css");
 
 /* T005 Light theme only (R3) */
 :root {

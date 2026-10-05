@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -36,23 +36,50 @@
             aria-label="Add a task"
           />
           <!-- T027 -->
-          <button id="add-task-button" class="feature-target btn btn-primary" data-target="add-task-button" data-spec="003:FR-005">
+          <button
+            id="add-task-button"
+            class="feature-target btn btn-primary"
+            data-target="add-task-button"
+            data-spec="003:FR-005"
+          >
             Add task
           </button>
         </section>
 
         <nav class="filters" aria-label="Task filters">
           <!-- T030 -->
-          <button class="feature-target filter-btn" data-target="filter-all" data-spec="003:FR-006" aria-pressed="true">All</button>
-          <button class="feature-target filter-btn" data-target="filter-active" data-spec="003:FR-006" aria-pressed="false">Active</button>
-          <button class="feature-target filter-btn" data-target="filter-completed" data-spec="003:FR-006" aria-pressed="false">Completed</button>
+          <button class="feature-target filter-btn" data-target="filter-all" data-spec="003:FR-006" aria-pressed="true">
+            All
+          </button>
+          <button
+            class="feature-target filter-btn"
+            data-target="filter-active"
+            data-spec="003:FR-006"
+            aria-pressed="false"
+          >
+            Active
+          </button>
+          <button
+            class="feature-target filter-btn"
+            data-target="filter-completed"
+            data-spec="003:FR-006"
+            aria-pressed="false"
+          >
+            Completed
+          </button>
         </nav>
 
         <section class="task-list-container">
           <ul id="task-list" class="task-list feature-target" data-target="task-list"></ul>
 
           <!-- T019 -->
-          <div id="empty-state" class="empty-state feature-target" data-target="empty-state" data-spec="003:FR-003" hidden>
+          <div
+            id="empty-state"
+            class="empty-state feature-target"
+            data-target="empty-state"
+            data-spec="003:FR-003"
+            hidden
+          >
             <h3>No tasks yet</h3>
             <p>Start by adding the first item to your spec-driven workflow.</p>
           </div>
@@ -60,9 +87,13 @@
 
         <footer class="meta-row">
           <!-- T027 -->
-          <button id="save-state" class="feature-target btn btn-ghost" data-target="save-state" data-spec="003:FR-005">Persist demo state</button>
+          <button id="save-state" class="feature-target btn btn-ghost" data-target="save-state" data-spec="003:FR-005">
+            Persist demo state
+          </button>
           <!-- T031 -->
-          <span class="status-badge" data-spec="003:FR-010"><span class="status-dot" aria-hidden="true"></span>Live trace enabled</span>
+          <span class="status-badge" data-spec="003:FR-010"
+            ><span class="status-dot" aria-hidden="true"></span>Live trace enabled</span
+          >
         </footer>
       </main>
 
@@ -123,20 +154,44 @@
         <div class="task-modal-fields">
           <div>
             <label for="task-title-field">Title</label>
-            <input id="task-title-field" class="feature-target" data-target="task-title-field" data-spec="001:FR-005 003:FR-006" type="text" />
+            <input
+              id="task-title-field"
+              class="feature-target"
+              data-target="task-title-field"
+              data-spec="001:FR-005 003:FR-006"
+              type="text"
+            />
           </div>
           <div>
             <label for="task-description-field">Toelichting</label>
-            <textarea id="task-description-field" class="feature-target" data-target="task-description-field" data-spec="001:FR-005 003:FR-006" rows="4"></textarea>
+            <textarea
+              id="task-description-field"
+              class="feature-target"
+              data-target="task-description-field"
+              data-spec="001:FR-005 003:FR-006"
+              rows="4"
+            ></textarea>
           </div>
           <div class="split-fields">
             <div>
               <label for="task-tag-field">Tag</label>
-              <input id="task-tag-field" class="feature-target" data-target="task-tag-field" data-spec="001:FR-005 003:FR-006" type="text" />
+              <input
+                id="task-tag-field"
+                class="feature-target"
+                data-target="task-tag-field"
+                data-spec="001:FR-005 003:FR-006"
+                type="text"
+              />
             </div>
             <div>
               <label for="task-owner-field">Eigenaar</label>
-              <input id="task-owner-field" class="feature-target" data-target="task-owner-field" data-spec="001:FR-005 003:FR-006" type="text" />
+              <input
+                id="task-owner-field"
+                class="feature-target"
+                data-target="task-owner-field"
+                data-spec="001:FR-005 003:FR-006"
+                type="text"
+              />
             </div>
           </div>
         </div>

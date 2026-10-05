@@ -27,9 +27,7 @@ test('all feature specs carry a valid source and phase map', () => {
 
 test('task detail fields are covered by the spec trace model', () => {
   const taskFields = ['task-open', 'task-title-field', 'task-description-field', 'task-tag-field', 'task-owner-field'];
-  const matching = FEATURE_SPECS.filter((spec) =>
-    taskFields.some((field) => spec.elementIds.includes(field))
-  );
+  const matching = FEATURE_SPECS.filter((spec) => taskFields.some((field) => spec.elementIds.includes(field)));
 
   assert.ok(matching.length >= 2);
   assert.ok(FEATURE_SPECS.some((spec) => spec.title.includes('Task detail')));
@@ -38,9 +36,7 @@ test('task detail fields are covered by the spec trace model', () => {
 test('task open action exposes a dedicated modal target for the popup workflow', () => {
   const modalTargetIds = ['task-modal', 'task-modal-close'];
 
-  const matching = FEATURE_SPECS.filter((spec) =>
-    modalTargetIds.some((field) => spec.elementIds.includes(field))
-  );
+  const matching = FEATURE_SPECS.filter((spec) => modalTargetIds.some((field) => spec.elementIds.includes(field)));
 
   assert.ok(matching.length >= 1, 'The modal target should be traceable in the spec map.');
 });

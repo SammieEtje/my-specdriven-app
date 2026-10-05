@@ -187,8 +187,9 @@ document.addEventListener('click', (event) => {
 
 // T036
 taskModalEl.addEventListener('close', () => {
-  const openButton = [...taskListEl.querySelectorAll('[data-target="task-open"]')]
-    .find((button) => button.dataset.taskId === selectedTaskId);
+  const openButton = [...taskListEl.querySelectorAll('[data-target="task-open"]')].find(
+    (button) => button.dataset.taskId === selectedTaskId
+  );
   openButton?.focus();
 });
 
