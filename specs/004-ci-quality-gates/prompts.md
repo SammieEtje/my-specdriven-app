@@ -68,3 +68,7 @@
 - The gate found two defects, both fixed: an XSS through task fields, and the trace block not being keyboard-scrollable.
 - Correction: the Close-button focus "gap" was a measurement error. The baseline is four 001 gaps; spec SC-004 and related docs are updated.
 - T036 waits for the 001 fix (analyze C1).
+- CI results (2026-10-05): see `quickstart.md`, "Results on GitHub".
+  - The owner approved making the repository public before the 001 fix, so that `security` could go green.
+  - A history-wide secret scan found nothing before the switch.
+  - Branch protection still waits (T036).

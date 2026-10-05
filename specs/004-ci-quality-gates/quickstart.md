@@ -101,3 +101,29 @@ Run locally on macOS with Node 26 and Playwright Chromium 153.
 **Correction to the 2026-10-05 manual test:** that test reported "Close returns focus to the page" as a fifth 001 gap. Measured in headless and headed Chrome, the Close button does return focus to Open; the earlier check read focus too early. The baseline is therefore four gaps (spec SC-004 updated).
 
 **Seen while testing, outside 001 FR-012:** closing the dialog by clicking its backdrop leaves focus on the closed `<dialog>` instead of the Open button. FR-012 only names the Close button and Escape, so this is noted, not tested.
+
+## Results on GitHub (T034, T035, 2026-10-05)
+
+**PR #2** (run 37358496634):
+- `code` passed in 15 s.
+- `usability` failed on exactly the four 001 tests.
+- `security` first failed only on dependency review and the CodeQL upload, because the repository was still private. After the owner approved going public early, a re-run passed `security` in 1 min 4 s, and `CodeQL` passed too.
+- The slowest job took about 3 min, under the 10-minute limit (SC-002).
+
+**Seeded violations** (PRs #3 to #7, closed without merging, branches deleted). `usability` is red on all of them because of the four-gap baseline; the column shows what was added.
+
+| # | PR | Red checks | Evidence |
+|---|----|-----------|----------|
+| 1 | #3 | `code` | `Tests`: failing assertion in `logic.test.js` |
+| 2 | #4 | `code` | `Tests`: `unknown data-spec IDs … '003:FR-099 (index.html:24)'` |
+| 3 | #5 | `security` | `Secret scan`: `RuleID generic-api-key`, `File seeded-config.txt`, `Line 2`, value `REDACTED` |
+| 4 | #6 | `code`, `security`, `usability` | `Privacy`: `index.html:8 remote URL / external script / analytics host (constitution V)`. Runtime guard: `constitution V: external request(s) attempted` in every browser test |
+| 5 | #7 | `code`, `usability` (extra findings) | axe `label (critical) at #task-input`. The 003 design test also reports `#task-input has no accessible name` |
+
+**Token permissions (SC-006, FR-014)**, read from the "Set up job" logs:
+- `code`: `Contents: read, Metadata: read`.
+- `security`: `Actions: read, Contents: read, Metadata: read, SecurityEvents: write`.
+
+**Known limit (spec FR-012, analyze U1)**: ESLint, Playwright and CodeQL findings appear as inline annotations. Failing `node --test` tests and gitleaks findings appear in the step log and the job summary, with file and line in the message, but not as inline annotations.
+
+**Repository settings applied early (owner approval, 2026-10-05)**: the repository is public, and Dependabot alerts, Dependabot security updates, secret scanning and push protection are on. Branch protection is not applied yet; it waits for the 001 fix (T036).
