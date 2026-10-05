@@ -91,7 +91,8 @@ export const FEATURE_SPECS = [
     elementIds: ['save-state'],
     phaseMap: {
       specify: 'The app should feel stable enough for a small real-world workflow, not only a mock.',
-      clarify: 'The team agrees that browser persistence is enough for this demo while keeping the implementation lean.',
+      clarify:
+        'The team agrees that browser persistence is enough for this demo while keeping the implementation lean.',
       plan: 'A localStorage adapter is a simple and reliable choice for storing the task data.',
       tasks: 'The persistence story covers save/load behavior and graceful handling of missing data.',
       implement: 'The app reads and writes the task list to localStorage whenever the model changes.'
@@ -104,11 +105,12 @@ export const FEATURE_SPECS = [
     source: 'clarify: “Opening a task should reveal its metadata in one focused view.”',
     elementIds: ['task-open', 'task-modal', 'task-modal-close'],
     phaseMap: {
-      specify: 'The product requirement is that a task should have enough context to be understood without leaving the board.',
+      specify:
+        'The product requirement is that a task should have enough context to be understood without leaving the board.',
       clarify: 'The team confirms the detail view should open from the task list without a separate page or redirect.',
-        plan: 'A browser-native modal keeps task editing focused and provides standard dialog behavior.',
-        tasks: 'The task story includes opening the selected item and editing its fields in the modal.',
-        implement: 'The app binds the modal inputs to the selected task and updates its list card immediately.'
+      plan: 'A browser-native modal keeps task editing focused and provides standard dialog behavior.',
+      tasks: 'The task story includes opening the selected item and editing its fields in the modal.',
+      implement: 'The app binds the modal inputs to the selected task and updates its list card immediately.'
     }
   },
   {
@@ -121,7 +123,8 @@ export const FEATURE_SPECS = [
       specify: 'The user needs extra context beside the title so tasks can be grouped and assigned without ambiguity.',
       clarify: 'The metadata fields must be optional but useful so the workflow stays quick for demo scenarios.',
       plan: 'The modal uses labeled fields bound directly to the selected task data model.',
-      tasks: 'Acceptance criteria cover editing title, description, tag, and owner while keeping the selected task in sync.',
+      tasks:
+        'Acceptance criteria cover editing title, description, tag, and owner while keeping the selected task in sync.',
       implement: 'The modal inputs write changes to the selected task and refresh its task card immediately.'
     }
   },
@@ -129,21 +132,26 @@ export const FEATURE_SPECS = [
   {
     id: 'spec-10',
     title: 'Polderworks design system',
-    description: 'The demo uses only the visual foundations of the central design system: colour tokens, IBM Plex, square geometry and its component patterns.',
+    description:
+      'The demo uses only the visual foundations of the central design system: colour tokens, IBM Plex, square geometry and its component patterns.',
     source: 'specify: “Adopt the central Polderworks design system in the todo app UI.”',
     elementIds: ['app-header'],
     phaseMap: {
-      specify: 'The demo should look like part of the house instead of a loose proof of concept, without changing any behaviour.',
+      specify:
+        'The demo should look like part of the house instead of a loose proof of concept, without changing any behaviour.',
       clarify: 'Only the visual foundations are adopted: no logo and no endorsement line in the interface.',
       plan: 'Design tokens are imported straight from the design system, components become plain CSS classes and IBM Plex is self-hosted for offline use.',
-      tasks: 'Static tests check tokens, fonts, geometry, contrast and preserved hooks before each part of the restyle is built.',
-      implement: 'The stylesheet uses only design-system tokens, and the markup gained pattern classes and 003 trace tokens.'
+      tasks:
+        'Static tests check tokens, fonts, geometry, contrast and preserved hooks before each part of the restyle is built.',
+      implement:
+        'The stylesheet uses only design-system tokens, and the markup gained pattern classes and 003 trace tokens.'
     }
   }
 ];
 
 export function buildTrace(selectedElement, spec = null) {
-  const selectedSpec = spec ?? FEATURE_SPECS.find((entry) => entry.elementIds.includes(selectedElement)) ?? FEATURE_SPECS[0];
+  const selectedSpec =
+    spec ?? FEATURE_SPECS.find((entry) => entry.elementIds.includes(selectedElement)) ?? FEATURE_SPECS[0];
 
   return {
     selectedElement,
@@ -168,4 +176,82 @@ export function updateTask(tasks, taskId, field, value) {
 
   task[field] = value;
   return task;
+}
+
+// T005 Create a task from a typed title (005:FR-002, FR-004). Returns null for an empty title.
+export function createTask(tasks, title) {
+  const trimmed = String(title ?? '').trim();
+  if (trimmed === '') return null;
+  const highest = tasks.reduce((max, task) => {
+    const match = /^task-(\d+)$/.exec(task.id);
+    return match ? Math.max(max, Number(match[1])) : max;
+  }, 0);
+  return { id: `task-${highest + 1}`, title: trimmed, description: '', tag: '', owner: '', completed: false };
+}
+
+// T013 Tasks visible under a filter (005:FR-005). Unknown filters show everything.
+export function filterTasks(tasks, filter) {
+  if (filter === 'active') return tasks.filter((task) => !task.completed);
+  if (filter === 'completed') return tasks.filter((task) => task.completed);
+  return tasks;
+}
+
+// T019 Empty-state copy (005:FR-007). With no tasks at all the generic text wins, whatever the filter.
+const EMPTY_STATE = {
+  all: { heading: 'No tasks yet', text: 'Start by adding the first item to your spec-driven workflow.' },
+  active: { heading: 'No active tasks', text: 'Everything is done. Add a new task to keep going.' },
+  completed: { heading: 'No completed tasks', text: 'Check off a task to see it here.' }
+};
+
+export function emptyStateText(filter, totalCount) {
+  if (totalCount === 0) return { ...EMPTY_STATE.all };
+  return { ...(EMPTY_STATE[filter] ?? EMPTY_STATE.all) };
+}
+
+// T024 Saved demo state (005:FR-008, FR-009, FR-011). Format: { version: 1, tasks: [...] }
+export const STORAGE_KEY = 'spec-driven-todo-demo';
+const STORAGE_VERSION = 1;
+
+export function serializeState(tasks) {
+  return JSON.stringify({ version: STORAGE_VERSION, tasks });
+}
+
+function copyTasks(tasks) {
+  return tasks.map((task) => ({ ...task }));
+}
+
+export function parseState(raw, fallbackTasks) {
+  let data;
+  try {
+    data = JSON.parse(raw);
+  } catch {
+    return copyTasks(fallbackTasks);
+  }
+
+  const valid =
+    data !== null &&
+    typeof data === 'object' &&
+    data.version === STORAGE_VERSION &&
+    Array.isArray(data.tasks) &&
+    data.tasks.every(
+      (task) =>
+        task !== null &&
+        typeof task === 'object' &&
+        typeof task.id === 'string' &&
+        typeof task.title === 'string' &&
+        typeof task.completed === 'boolean'
+    );
+  if (!valid) return copyTasks(fallbackTasks);
+
+  return data.tasks.map((task) => {
+    const text = (field) => (typeof task[field] === 'string' ? task[field] : '');
+    return {
+      id: task.id,
+      title: task.title.trim() === '' ? 'Untitled task' : task.title,
+      description: text('description'),
+      tag: text('tag'),
+      owner: text('owner'),
+      completed: task.completed
+    };
+  });
 }

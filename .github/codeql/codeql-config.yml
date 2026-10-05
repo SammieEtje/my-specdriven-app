@@ -1,0 +1,15 @@
+# T019 CodeQL configuration for the quality gate (004:FR-007)
+name: quality-gate
+queries:
+  - uses: security-extended
+paths-ignore:
+  - node_modules
+  - playwright-report
+  - test-results
+  - specs
+  - .specify
+  - .claude
+# Exceptions (FR-016): add an entry per waived query, with the reason as a comment.
+#   - exclude:
+#       id: js/example-query # <reason>
+query-filters: []

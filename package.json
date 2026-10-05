@@ -5,6 +5,24 @@
   "type": "module",
   "scripts": {
     "test": "node --test",
+    "lint": "node scripts/lint.js",
+    "lint:security": "eslint --config eslint.security.config.js app.js logic.js html.js",
+    "format:check": "prettier --check .",
+    "format": "prettier --write .",
+    "test:e2e": "playwright test",
     "start": "python3 -m http.server 8000"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@eslint-community/eslint-plugin-eslint-comments": "^4.8.1",
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.63.0",
+    "eslint": "^10.12.0",
+    "eslint-plugin-no-unsanitized": "^4.1.5",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.9"
+  },
+  "engines": {
+    "node": ">=24"
   }
 }

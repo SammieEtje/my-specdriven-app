@@ -1,4 +1,15 @@
-import { FEATURE_SPECS, buildTrace, updateTask } from './logic.js';
+import {
+  FEATURE_SPECS,
+  buildTrace,
+  updateTask,
+  createTask,
+  filterTasks,
+  emptyStateText,
+  STORAGE_KEY,
+  serializeState,
+  parseState
+} from './logic.js';
+import { html } from './html.js';
 
 const titleEl = document.getElementById('trace-title');
 const featureIdEl = document.getElementById('trace-feature-id');
@@ -13,8 +24,15 @@ const taskTagField = document.getElementById('task-tag-field');
 const taskOwnerField = document.getElementById('task-owner-field');
 const taskModalEl = document.getElementById('task-modal');
 const taskModalTitleEl = document.getElementById('task-modal-title');
+const composerEl = document.querySelector('form.composer');
+const taskInputEl = document.getElementById('task-input');
+const taskInputErrorEl = document.getElementById('task-input-error');
+const appStatusEl = document.getElementById('app-status');
+const emptyStateEl = document.getElementById('empty-state');
+let statusTimer = null;
 
-const taskState = [
+// T025 (005) The example tasks are only used when nothing valid is saved yet (FR-009)
+const exampleTasks = [
   {
     id: 'task-1',
     title: 'Prepare launch recap',
@@ -33,7 +51,35 @@ const taskState = [
   }
 ];
 
-let selectedTaskId = taskState[0].id;
+// T025 (005) Storage can be blocked (private mode, policies); the demo then runs in memory
+function readStorage() {
+  try {
+    return localStorage.getItem(STORAGE_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function writeStorage(value) {
+  try {
+    localStorage.setItem(STORAGE_KEY, value);
+  } catch {
+    // Not saved, but the demo keeps working (spec edge case "Opslag niet beschikbaar")
+  }
+}
+
+const taskState = parseState(readStorage(), exampleTasks);
+
+let selectedTaskId = taskState[0]?.id;
+// T002 (005) One place that every change goes through; US2 filters and US4 saves here
+let currentFilter = 'all';
+let titleOnOpen = '';
+
+function refresh() {
+  renderTaskList();
+  // T025 (005) Every change is saved immediately (FR-008)
+  writeStorage(serializeState(taskState));
+}
 
 function renderPhaseList(trace) {
   phaseListEl.innerHTML = '';
@@ -42,7 +88,8 @@ function renderPhaseList(trace) {
     // T038 The implement phase produced the on-screen element, so it gets the Callout left rule
     const item = document.createElement('li');
     item.className = phase.phase === 'implement' ? 'phase-item callout' : 'phase-item';
-    item.innerHTML = `
+    // T017 Escape trace text before it becomes markup (004:FR-007)
+    item.innerHTML = html`
       <strong class="phase-name">${phase.phase}</strong>
       <div class="phase-decision">${phase.decision}</div>
     `;
@@ -83,6 +130,8 @@ function getSelectedTask() {
 
 function renderTaskModal() {
   const task = getSelectedTask();
+  // T009 (005) Remember the title so a cleared title can be restored on close (FR-011)
+  titleOnOpen = task.title;
 
   taskModalTitleEl.textContent = task.title;
   taskTitleField.value = task.title;
@@ -101,10 +150,14 @@ function renderTaskList() {
   // T027 Open button uses the secondary Button pattern
   // T045 Task checkbox carries its 003:FR-006 trace token
   // T018 Completed class and status text, Tag pattern for the task tag
-  taskListEl.innerHTML = taskState
-    .map((task) => {
-      const isSelected = task.id === selectedTaskId;
-      return `
+  // T017 Task fields are user-editable, so every row is escaped with html`` (004:FR-007, XSS fix)
+  taskListEl.innerHTML = '';
+  // T015 (005) Render only the tasks in the current filter
+  filterTasks(taskState, currentFilter).forEach((task) => {
+    const isSelected = task.id === selectedTaskId;
+    taskListEl.insertAdjacentHTML(
+      'beforeend',
+      html`
         <li class="task-card ${isSelected ? 'selected' : ''} ${task.completed ? 'completed' : ''}" data-spec="003:FR-003">
           <label class="task-main">
             <input class="feature-target" data-target="task-toggle-${task.id}" data-spec="003:FR-006" type="checkbox" ${task.completed ? 'checked' : ''} />
@@ -118,14 +171,24 @@ function renderTaskList() {
             <button class="task-open-button feature-target btn btn-secondary ${isSelected ? 'selected' : ''}" data-target="task-open" data-task-id="${task.id}" data-spec="003:FR-005">Open</button>
           </div>
         </li>
-      `;
-    })
-    .join('');
+      `
+    );
+  });
+
+  // T020 (005) Show the empty state instead of an empty list, with text for the current filter (FR-007)
+  const isEmpty = taskListEl.children.length === 0;
+  taskListEl.hidden = isEmpty;
+  emptyStateEl.hidden = !isEmpty;
+  if (isEmpty) {
+    const { heading, text } = emptyStateText(currentFilter, taskState.length);
+    emptyStateEl.querySelector('h3').textContent = heading;
+    emptyStateEl.querySelector('p').textContent = text;
+  }
 }
 
 function openTask(taskId) {
   selectedTaskId = taskId;
-  renderTaskList();
+  refresh();
   renderTaskModal();
   renderTrace('task-open');
 }
@@ -133,7 +196,7 @@ function openTask(taskId) {
 function updateSelectedTask(field, value) {
   // T034
   if (updateTask(taskState, selectedTaskId, field, value)) {
-    renderTaskList();
+    refresh();
     taskModalTitleEl.textContent = getSelectedTask().title || 'Task details';
   }
 }
@@ -164,17 +227,20 @@ document.addEventListener('click', (event) => {
     const task = taskState.find((item) => item.id === dataTarget.replace('task-toggle-', ''));
     if (task) {
       task.completed = !task.completed;
-      renderTaskList();
+      refresh();
       renderTrace(dataTarget);
     }
     return;
   }
 
-  // T030 Reflect the selected filter for assistive technology; filtering itself is unchanged
+  // T030 Reflect the selected filter for assistive technology
   if (dataTarget && dataTarget.startsWith('filter-')) {
     document.querySelectorAll('.filter-btn').forEach((button) => {
       button.setAttribute('aria-pressed', String(button === target));
     });
+    // T015 (005) The filter now actually limits the list (FR-005)
+    currentFilter = dataTarget.replace('filter-', '');
+    refresh();
   }
 
   if (dataTarget === 'task-modal') {
@@ -182,13 +248,27 @@ document.addEventListener('click', (event) => {
     return;
   }
 
+  // T026 (005) Persist saves explicitly and confirms; the trace still shows spec-07 below (FR-010)
+  if (dataTarget === 'save-state') {
+    writeStorage(serializeState(taskState));
+    showStatus('Demo state saved');
+  }
+
   renderTrace(dataTarget);
 });
 
 // T036
 taskModalEl.addEventListener('close', () => {
-  const openButton = [...taskListEl.querySelectorAll('[data-target="task-open"]')]
-    .find((button) => button.dataset.taskId === selectedTaskId);
+  // T009 (005) A title cleared in the dialog falls back to the title it had when opened (FR-011)
+  const task = getSelectedTask();
+  if (task && task.title.trim() === '') {
+    task.title = titleOnOpen;
+    refresh();
+  }
+
+  const openButton = [...taskListEl.querySelectorAll('[data-target="task-open"]')].find(
+    (button) => button.dataset.taskId === selectedTaskId
+  );
   openButton?.focus();
 });
 
@@ -216,6 +296,9 @@ document.addEventListener('input', (event) => {
   const dataTarget = target.dataset.target;
   if (!dataTarget) return;
 
+  // T008 (005) Typing clears the add error
+  if (dataTarget === 'task-input') clearInputError();
+
   if (dataTarget === 'task-title-field') {
     updateSelectedTask('title', target.value);
   }
@@ -235,5 +318,44 @@ document.addEventListener('input', (event) => {
   renderTrace(dataTarget);
 });
 
+// T015 (005) Short, politely announced status message (role="status"), cleared after 4 seconds
+function showStatus(text) {
+  clearTimeout(statusTimer);
+  appStatusEl.textContent = text;
+  statusTimer = setTimeout(() => {
+    appStatusEl.textContent = '';
+  }, 4000);
+}
+
+// T008 (005) Add a task by click or Enter (FR-001 to FR-004)
+function showInputError() {
+  taskInputEl.setAttribute('aria-invalid', 'true');
+  taskInputEl.setAttribute('aria-describedby', 'task-input-error');
+  taskInputErrorEl.textContent = 'Enter a task title.';
+}
+
+function clearInputError() {
+  taskInputEl.removeAttribute('aria-invalid');
+  taskInputErrorEl.textContent = '';
+}
+
+composerEl.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const task = createTask(taskState, taskInputEl.value);
+  if (!task) {
+    showInputError();
+    return;
+  }
+  taskState.push(task);
+  clearInputError();
+  refresh();
+  // T015 (005) The new task is active, so tell the user where it went (FR-005)
+  if (currentFilter === 'completed') showStatus('Task added to Active');
+  taskInputEl.value = '';
+  taskInputEl.focus();
+});
+
 renderTaskList();
 renderTrace('add-task-button');
+// T008 (005) Enable adding only once the submit handler is attached, so the form never submits natively
+composerEl.querySelector('#add-task-button').disabled = false;

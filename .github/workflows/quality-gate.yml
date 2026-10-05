@@ -1,0 +1,203 @@
+# T008 Quality gate for pull requests to main (feature 004, contracts/quality-gate.md)
+name: Quality gate
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-gate-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  code:
+    name: code
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install
+        run: npm ci
+      # T012 Tests (incl. trace, privacy, workflow, html), lint and formatting (FR-002 to FR-004)
+      - name: Tests
+        id: tests
+        run: npm test
+      - name: Lint
+        id: lint
+        if: ${{ !cancelled() }}
+        run: npm run lint
+        env:
+          CI: true
+      - name: Formatting
+        id: formatting
+        if: ${{ !cancelled() }}
+        run: npm run format:check
+      # T028 One summary table per job (FR-012, US4)
+      - name: Summary
+        if: ${{ always() }}
+        env:
+          TESTS: ${{ steps.tests.outcome }}
+          LINT: ${{ steps.lint.outcome }}
+          FORMATTING: ${{ steps.formatting.outcome }}
+        run: |
+          {
+            echo "### code"
+            echo "| Step | Outcome | Run locally |"
+            echo "|---|---|---|"
+            echo "| Tests (incl. trace, privacy, workflow) | $TESTS | \`npm test\` |"
+            echo "| Lint | $LINT | \`npm run lint\` |"
+            echo "| Formatting | $FORMATTING | \`npm run format:check\` (fix: \`npm run format\`) |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  security:
+    name: security
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      # T020 Secrets in the commits of this change, redacted in the output (FR-005)
+      - name: Secret scan
+        id: secrets
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          RANGE=""
+          if [ -n "$BASE" ] && [ "$BASE" != "0000000000000000000000000000000000000000" ]; then
+            RANGE="--log-opts=$BASE..$HEAD"
+          fi
+          docker run --rm -v "$PWD:/repo" \
+            ghcr.io/gitleaks/gitleaks:v8.30.1@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f \
+            git /repo --redact --verbose $RANGE
+      - name: Set up Node
+        if: ${{ !cancelled() }}
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install
+        if: ${{ !cancelled() }}
+        run: npm ci
+      # T020 Vulnerable dependencies (FR-006)
+      - name: Dependency audit
+        id: audit
+        if: ${{ !cancelled() }}
+        run: npm audit --audit-level=high
+      - name: Dependency review
+        id: review
+        if: ${{ !cancelled() && github.event_name == 'pull_request' }}
+        uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+        with:
+          fail-on-severity: high
+      # T020 Unsafe HTML sinks and external requests (FR-007, FR-008)
+      - name: Unsafe HTML
+        id: unsafe-html
+        if: ${{ !cancelled() }}
+        run: npm run lint:security
+        env:
+          CI: true
+      - name: Privacy
+        id: privacy
+        if: ${{ !cancelled() }}
+        run: node --test privacy.test.js
+      # T020 Static analysis (FR-007)
+      - name: CodeQL init
+        if: ${{ !cancelled() }}
+        uses: github/codeql-action/init@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
+        with:
+          languages: javascript-typescript
+          config-file: ./.github/codeql/codeql-config.yml
+      - name: CodeQL analyze
+        id: codeql
+        if: ${{ !cancelled() }}
+        uses: github/codeql-action/analyze@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
+      # T028 One summary table per job (FR-012, US4)
+      - name: Summary
+        if: ${{ always() }}
+        env:
+          SECRETS: ${{ steps.secrets.outcome }}
+          AUDIT: ${{ steps.audit.outcome }}
+          REVIEW: ${{ steps.review.outcome }}
+          UNSAFE_HTML: ${{ steps.unsafe-html.outcome }}
+          PRIVACY: ${{ steps.privacy.outcome }}
+          CODEQL: ${{ steps.codeql.outcome }}
+        run: |
+          {
+            echo "### security"
+            echo "| Step | Outcome | Run locally |"
+            echo "|---|---|---|"
+            echo "| Secret scan (gitleaks, redacted) | $SECRETS | \`gitleaks git . --redact\` |"
+            echo "| Dependency audit | $AUDIT | \`npm audit --audit-level=high\` |"
+            echo "| Dependency review | ${REVIEW:-skipped} | PRs only |"
+            echo "| Unsafe HTML | $UNSAFE_HTML | \`npm run lint:security\` |"
+            echo "| Privacy (constitution V) | $PRIVACY | \`node --test privacy.test.js\` |"
+            echo "| CodeQL | $CODEQL | see the Security tab and PR annotations |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  usability:
+    name: usability
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install
+        run: npm ci
+      # T027 Browser checks: axe WCAG 2.1 AA, keyboard focus, 001 core flow, external-request guard (FR-009 to FR-011)
+      - name: Install browser
+        run: npx playwright install --with-deps chromium
+      - name: Browser checks
+        id: e2e
+        run: npm run test:e2e
+      # T029 Keep the HTML report when something fails
+      - name: Upload report
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+      # T028 One summary table per job (FR-012, US4)
+      - name: Summary
+        if: ${{ always() }}
+        env:
+          E2E: ${{ steps.e2e.outcome }}
+        run: |
+          {
+            echo "### usability"
+            echo "| Step | Outcome | Run locally |"
+            echo "|---|---|---|"
+            echo "| Browser checks (axe, keyboard, 001 core flow, privacy guard) | $E2E | \`npm run test:e2e\` |"
+            echo ""
+            echo "Failing tests are annotated in the PR; the full report is in the \`playwright-report\` artifact."
+          } >> "$GITHUB_STEP_SUMMARY"
