@@ -127,3 +127,12 @@ Run locally on macOS with Node 26 and Playwright Chromium 153.
 **Known limit (spec FR-012, analyze U1)**: ESLint, Playwright and CodeQL findings appear as inline annotations. Failing `node --test` tests and gitleaks findings appear in the step log and the job summary, with file and line in the message, but not as inline annotations.
 
 **Repository settings applied early (owner approval, 2026-10-05)**: the repository is public, and Dependabot alerts, Dependabot security updates, secret scanning and push protection are on. Branch protection is not applied yet; it waits for the 001 fix (T036).
+
+## Results of T036 (2026-10-05)
+
+- The 001 gaps were fixed by feature 005 (PR #8, merged into `004-ci-quality-gates`).
+- PR #1 (003) had already been merged into `main` by the owner at 18:29.
+- PR #2 (004 + 005) was merged into `main` at 21:44, with `code`, `security`, `usability` and `CodeQL` green on head `f98eb6a`. Two runs were cancelled during a GitHub Actions incident; job-level re-runs passed.
+- Branch protection on `main`: required checks `["code","security","usability"]`, `strict: true`, `enforce_admins: true`. Verified with `gh api …/branches/main/protection`.
+- The repository is public. Dependabot alerts, Dependabot security updates, secret scanning and push protection are on (applied earlier, see "Results on GitHub").
+- This record itself went through a PR, the first change gated by the protection.

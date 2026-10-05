@@ -72,3 +72,10 @@
   - The owner approved making the repository public before the 001 fix, so that `security` could go green.
   - A history-wide secret scan found nothing before the switch.
   - Branch protection still waits (T036).
+
+## Phase: T036 (repository settings)
+
+- Date: 2026-10-05
+- PR #1 was already merged by the owner. PR #2 (004 + 005) was merged with all checks green.
+- Branch protection is on for `main` (`code`, `security`, `usability`, strict, admins included).
+- This record went in through a pull request, because `main` no longer accepts direct pushes.
