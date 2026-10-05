@@ -10,7 +10,6 @@ export const FEATURE_SPECS = [
       clarify: 'The demo confirms the action happens from the main dashboard without a separate workflow.',
       plan: 'The simplest solution is a single input and a primary button, with no extra navigation.',
       tasks: 'Acceptance criteria cover adding a task, showing it immediately, and preventing blank entries.',
-      // T032 Known 001 gap, see 004 core-flow test "001:US5 add a task from the input"
       implement: 'The button dispatches a task creation action and appends it to the in-memory task list.'
     }
   },
@@ -177,4 +176,82 @@ export function updateTask(tasks, taskId, field, value) {
 
   task[field] = value;
   return task;
+}
+
+// T005 Create a task from a typed title (005:FR-002, FR-004). Returns null for an empty title.
+export function createTask(tasks, title) {
+  const trimmed = String(title ?? '').trim();
+  if (trimmed === '') return null;
+  const highest = tasks.reduce((max, task) => {
+    const match = /^task-(\d+)$/.exec(task.id);
+    return match ? Math.max(max, Number(match[1])) : max;
+  }, 0);
+  return { id: `task-${highest + 1}`, title: trimmed, description: '', tag: '', owner: '', completed: false };
+}
+
+// T013 Tasks visible under a filter (005:FR-005). Unknown filters show everything.
+export function filterTasks(tasks, filter) {
+  if (filter === 'active') return tasks.filter((task) => !task.completed);
+  if (filter === 'completed') return tasks.filter((task) => task.completed);
+  return tasks;
+}
+
+// T019 Empty-state copy (005:FR-007). With no tasks at all the generic text wins, whatever the filter.
+const EMPTY_STATE = {
+  all: { heading: 'No tasks yet', text: 'Start by adding the first item to your spec-driven workflow.' },
+  active: { heading: 'No active tasks', text: 'Everything is done. Add a new task to keep going.' },
+  completed: { heading: 'No completed tasks', text: 'Check off a task to see it here.' }
+};
+
+export function emptyStateText(filter, totalCount) {
+  if (totalCount === 0) return { ...EMPTY_STATE.all };
+  return { ...(EMPTY_STATE[filter] ?? EMPTY_STATE.all) };
+}
+
+// T024 Saved demo state (005:FR-008, FR-009, FR-011). Format: { version: 1, tasks: [...] }
+export const STORAGE_KEY = 'spec-driven-todo-demo';
+const STORAGE_VERSION = 1;
+
+export function serializeState(tasks) {
+  return JSON.stringify({ version: STORAGE_VERSION, tasks });
+}
+
+function copyTasks(tasks) {
+  return tasks.map((task) => ({ ...task }));
+}
+
+export function parseState(raw, fallbackTasks) {
+  let data;
+  try {
+    data = JSON.parse(raw);
+  } catch {
+    return copyTasks(fallbackTasks);
+  }
+
+  const valid =
+    data !== null &&
+    typeof data === 'object' &&
+    data.version === STORAGE_VERSION &&
+    Array.isArray(data.tasks) &&
+    data.tasks.every(
+      (task) =>
+        task !== null &&
+        typeof task === 'object' &&
+        typeof task.id === 'string' &&
+        typeof task.title === 'string' &&
+        typeof task.completed === 'boolean'
+    );
+  if (!valid) return copyTasks(fallbackTasks);
+
+  return data.tasks.map((task) => {
+    const text = (field) => (typeof task[field] === 'string' ? task[field] : '');
+    return {
+      id: task.id,
+      title: task.title.trim() === '' ? 'Untitled task' : task.title,
+      description: text('description'),
+      tag: text('tag'),
+      owner: text('owner'),
+      completed: task.completed
+    };
+  });
 }

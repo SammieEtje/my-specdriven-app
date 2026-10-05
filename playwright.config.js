@@ -10,7 +10,7 @@ export default defineConfig({
   use: { baseURL: 'http://localhost:8000' },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {
-    command: 'python3 -m http.server 8000',
+    command: 'node scripts/serve.js',
     url: 'http://localhost:8000',
     reuseExistingServer: !process.env.CI
   }

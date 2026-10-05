@@ -1,10 +1,10 @@
 // T025 The full 001 core flow in the browser (004:FR-011). Known 001 gaps are not skipped (clarification Q1).
-import { test, expect } from './fixtures.js';
+import { test, expect, gotoApp } from './fixtures.js';
 
 const rows = (page) => page.locator('#task-list .task-card');
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/');
+  await gotoApp(page);
 });
 
 test('001:US5 add a task from the input', async ({ page }) => {

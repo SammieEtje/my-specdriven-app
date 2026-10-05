@@ -24,12 +24,13 @@
           <span class="badge" data-spec="003:FR-003">7 specs</span>
         </header>
 
-        <section class="composer">
+        <!-- T006 A form gives Enter-to-add for free (005:FR-001) -->
+        <form class="composer" novalidate data-spec="005:FR-001">
           <!-- T028 -->
           <input
             id="task-input"
             class="feature-target"
-            data-spec="003:FR-006"
+            data-spec="003:FR-006 005:FR-004"
             data-target="task-input"
             type="text"
             value="Review onboarding checklist"
@@ -38,23 +39,31 @@
           <!-- T027 -->
           <button
             id="add-task-button"
+            type="submit"
+            disabled
             class="feature-target btn btn-primary"
             data-target="add-task-button"
-            data-spec="003:FR-005"
+            data-spec="003:FR-005 005:FR-001"
           >
             Add task
           </button>
-        </section>
+          <p id="task-input-error" class="field-error" data-spec="005:FR-004"></p>
+        </form>
 
         <nav class="filters" aria-label="Task filters">
           <!-- T030 -->
-          <button class="feature-target filter-btn" data-target="filter-all" data-spec="003:FR-006" aria-pressed="true">
+          <button
+            class="feature-target filter-btn"
+            data-target="filter-all"
+            data-spec="003:FR-006 005:FR-005"
+            aria-pressed="true"
+          >
             All
           </button>
           <button
             class="feature-target filter-btn"
             data-target="filter-active"
-            data-spec="003:FR-006"
+            data-spec="003:FR-006 005:FR-005"
             aria-pressed="false"
           >
             Active
@@ -62,7 +71,7 @@
           <button
             class="feature-target filter-btn"
             data-target="filter-completed"
-            data-spec="003:FR-006"
+            data-spec="003:FR-006 005:FR-005"
             aria-pressed="false"
           >
             Completed
@@ -77,7 +86,7 @@
             id="empty-state"
             class="empty-state feature-target"
             data-target="empty-state"
-            data-spec="003:FR-003"
+            data-spec="003:FR-003 005:FR-007"
             hidden
           >
             <h3>No tasks yet</h3>
@@ -86,10 +95,19 @@
         </section>
 
         <footer class="meta-row">
-          <!-- T027 -->
-          <button id="save-state" class="feature-target btn btn-ghost" data-target="save-state" data-spec="003:FR-005">
-            Persist demo state
-          </button>
+          <!-- T014 (005) Persist and its status message share one group, so the footer keeps two items -->
+          <div class="meta-actions">
+            <!-- T027 -->
+            <button
+              id="save-state"
+              class="feature-target btn btn-ghost"
+              data-target="save-state"
+              data-spec="003:FR-005 005:FR-010"
+            >
+              Persist demo state
+            </button>
+            <p id="app-status" class="app-status" role="status" data-spec="005:FR-005 005:FR-010"></p>
+          </div>
           <!-- T031 -->
           <span class="status-badge" data-spec="003:FR-010"
             ><span class="status-dot" aria-hidden="true"></span>Live trace enabled</span
@@ -118,11 +136,13 @@
 
           <!-- T036 -->
           <!-- T026 Scrollable region must be keyboard-focusable (axe scrollable-region-focusable, WCAG 2.1.1) -->
+          <!-- 005 T001 role="region" makes the aria-label valid (axe aria-prohibited-attr) -->
           <pre
             id="trace-object"
             class="trace-object"
             data-spec="003:FR-009 004:FR-009"
             tabindex="0"
+            role="region"
             aria-label="Trace object"
           ></pre>
 

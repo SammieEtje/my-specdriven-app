@@ -1,6 +1,6 @@
 // T023 WCAG 2.1 AA checks with axe (004:FR-009, constitution IV)
 import AxeBuilder from '@axe-core/playwright';
-import { test, expect } from './fixtures.js';
+import { test, expect, gotoApp } from './fixtures.js';
 import { loadExceptions } from './a11y-exceptions.js';
 
 async function seriousViolations(page) {
@@ -16,7 +16,7 @@ async function seriousViolations(page) {
 }
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/');
+  await gotoApp(page);
 });
 
 test('004:FR-009 initial page has no serious/critical WCAG 2.1 AA violations', async ({ page }) => {
