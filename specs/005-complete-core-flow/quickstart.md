@@ -55,3 +55,8 @@ Run locally on macOS, Node 26, Playwright Chromium.
    - In the app, "Add task" starts `disabled` and is enabled once the submit handler is attached, so a native submit can't happen.
    - In the tests, a shared `gotoApp(page)` helper in `e2e/fixtures.js` waits for that.
 3. **Flaky local test server.** Under parallel workers, `python3 -m http.server` stalled or refused connections (its listen backlog is small). Playwright's `webServer` now runs `node scripts/serve.js`, a small dependency-free static server. `npm start` stays on Python, as the 004 contract specifies.
+
+## Results on GitHub (T031, T032, 2026-10-05)
+
+- PR #8 against `main`, run 37367040587: `code`, `security`, `usability` and `CodeQL` are all green. The first attempt and one re-run were cancelled without starting, because no runner was available during a GitHub Actions incident ("degraded performance" on githubstatus.com). A job-level re-run passed.
+- PR #8 was retargeted to `004-ci-quality-gates` and merged on 2026-10-05 (merge commit). PR #2 then carries 004 and 005 together, and its checks re-run on that head.

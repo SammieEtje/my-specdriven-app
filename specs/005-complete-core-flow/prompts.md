@@ -56,3 +56,4 @@
   - `index.html` gets `form.composer`, `#task-input-error` and `#app-status`, plus the 005 tokens.
 - Outside the task list: an axe `aria-prohibited-attr` fix on `#trace-object`, an app-readiness guard (Add task disabled until ready) with `gotoApp`, and `scripts/serve.js` for the Playwright server (see `quickstart.md`, Results).
 - Tests: 54 node tests and 28 e2e tests, all green three times in a row.
+- T031 and T032: PR #8 green, retargeted and merged into `004-ci-quality-gates`. A GitHub Actions incident cancelled jobs twice without starting them, and re-runs fixed that.

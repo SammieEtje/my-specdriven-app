@@ -190,8 +190,8 @@ description: "Task list for completing the 001 core flow"
 - [X] T028 Remove the `// T032 Known 001 gap …` comment from `logic.js`, because the gap is closed. Run `npm test`
 - [X] T029 Walk through the seven manual checks in `specs/005-complete-core-flow/quickstart.md` (headless Chromium is fine) and record the results under a new "Results" heading in that file
 - [X] T030 Append `## Phase: implement` to `specs/005-complete-core-flow/prompts.md`, commit, and tag `005-implement`
-- [ ] T031 **After confirmation**: push `005-complete-core-flow` and its tags, and open a PR to `main`, so the 004 quality gate runs on 005's code. Make sure `code`, `security`, `usability` and `CodeQL` are all green. Record the run URL in `quickstart.md`
-- [ ] T032 **After confirmation**: retarget the PR to `004-ci-quality-gates` (`gh pr edit --base 004-ci-quality-gates`) and merge it. Make sure PR #2's checks re-run and are all green. Then hand back to 004 T036 (merge #1, then #2, into `main`, then branch protection)
+- [X] T031 **After confirmation**: push `005-complete-core-flow` and its tags, and open a PR to `main`, so the 004 quality gate runs on 005's code. Make sure `code`, `security`, `usability` and `CodeQL` are all green. Record the run URL in `quickstart.md`
+- [X] T032 **After confirmation**: retarget the PR to `004-ci-quality-gates` (`gh pr edit --base 004-ci-quality-gates`) and merge it. Make sure PR #2's checks re-run and are all green. Then hand back to 004 T036 (merge #1, then #2, into `main`, then branch protection)
 
 ---
 
