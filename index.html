@@ -117,7 +117,14 @@
           <p id="trace-description" class="trace-description"></p>
 
           <!-- T036 -->
-          <pre id="trace-object" class="trace-object" data-spec="003:FR-009"></pre>
+          <!-- T026 Scrollable region must be keyboard-focusable (axe scrollable-region-focusable, WCAG 2.1.1) -->
+          <pre
+            id="trace-object"
+            class="trace-object"
+            data-spec="003:FR-009 004:FR-009"
+            tabindex="0"
+            aria-label="Trace object"
+          ></pre>
 
           <!-- T037 -->
           <ol id="phase-list" class="phase-list" data-spec="003:FR-009" aria-live="polite"></ol>

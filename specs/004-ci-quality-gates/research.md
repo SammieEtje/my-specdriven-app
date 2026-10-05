@@ -97,7 +97,7 @@ default branch was `003-adopt-polderworks-design` and has been set to `main`.
   - **Core flow (FR-011)**: one named test per 001 step (add, check off, filter all, active and
     completed, empty state, open and edit, close with the button and with Escape with focus
     returned to Open, persist and reload, and trace). Following the clarification, nothing is
-    skipped or marked as expected-to-fail. Five tests will fail until the 001 gaps are fixed.
+    skipped or marked as expected-to-fail. Four tests will fail until the 001 gaps are fixed (add, filters, empty state, persist).
   - **Offline and privacy at runtime (constitution V)**: every test routes non-`localhost`
     requests to `abort` and records them. A fixture fails the test if any were attempted.
   - **Reporting**: the `github` reporter gives inline annotations. The HTML report is uploaded as
@@ -169,7 +169,7 @@ default branch was `003-adopt-polderworks-design` and has been set to `main`.
   needs a public repository.
 - **Consequence and order** (analyze C1, owner decision 2026-10-05): The usability check tests the full
   001 flow (clarification Q1), and the constitution only calls a feature done when all tests pass.
-  So 004 is built and its PR opened, the five 001 gaps are fixed in their own branch, and only
+  So 004 is built and its PR opened, the four 001 gaps are fixed in their own branch, and only
   then are PR #1, the 001 fix and 004 merged and protection switched on.
 
 ## R12. Node version and dependencies (constitution I)

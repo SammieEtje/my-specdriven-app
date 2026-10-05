@@ -53,3 +53,18 @@
   - SC-006 and FR-014 now name the CodeQL alert upload as the only write permission.
   - The fork test is replaced by a token-permissions log check, because GitHub doesn't allow forking your own repository.
   - C1 (owner decision): fix the 001 gaps first. T036 waits for that fix; then PR #1, the 001 fix and 004 merge, and protection goes on.
+
+## Phase: implement
+
+- Date: 2026-10-05
+- Branch: `004-ci-quality-gates`
+- Trigger: `/speckit-implement`
+- Result: `.github/workflows/quality-gate.yml` with jobs `code`, `security` and `usability`.
+  - Actions are pinned by SHA: checkout v7.0.1, setup-node v7.0.0, dependency-review v5.0.0, codeql-action v4.38.2 and upload-artifact v7.0.1. gitleaks v8.30.1 is pinned by digest.
+  - New tests: `trace.test.js`, `privacy.test.js`, `workflow.test.js`, `html.test.js`, `e2e/a11y-exceptions.test.js`, and Playwright specs for a11y, keyboard and the core flow.
+- Decisions during implementation:
+  - Prettier uses `embeddedLanguageFormatting: off` and double quotes in CSS, so the 003 source-text tests keep matching.
+  - Task rows render via `insertAdjacentHTML` with the escaping `html` tag, because the lint rule cannot see through `.join('')`.
+- The gate found two defects, both fixed: an XSS through task fields, and the trace block not being keyboard-scrollable.
+- Correction: the Close-button focus "gap" was a measurement error. The baseline is four 001 gaps; spec SC-004 and related docs are updated.
+- T036 waits for the 001 fix (analyze C1).

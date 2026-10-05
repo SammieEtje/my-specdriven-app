@@ -1,4 +1,5 @@
 import { FEATURE_SPECS, buildTrace, updateTask } from './logic.js';
+import { html } from './html.js';
 
 const titleEl = document.getElementById('trace-title');
 const featureIdEl = document.getElementById('trace-feature-id');
@@ -42,7 +43,8 @@ function renderPhaseList(trace) {
     // T038 The implement phase produced the on-screen element, so it gets the Callout left rule
     const item = document.createElement('li');
     item.className = phase.phase === 'implement' ? 'phase-item callout' : 'phase-item';
-    item.innerHTML = `
+    // T017 Escape trace text before it becomes markup (004:FR-007)
+    item.innerHTML = html`
       <strong class="phase-name">${phase.phase}</strong>
       <div class="phase-decision">${phase.decision}</div>
     `;
@@ -101,10 +103,13 @@ function renderTaskList() {
   // T027 Open button uses the secondary Button pattern
   // T045 Task checkbox carries its 003:FR-006 trace token
   // T018 Completed class and status text, Tag pattern for the task tag
-  taskListEl.innerHTML = taskState
-    .map((task) => {
-      const isSelected = task.id === selectedTaskId;
-      return `
+  // T017 Task fields are user-editable, so every row is escaped with html`` (004:FR-007, XSS fix)
+  taskListEl.innerHTML = '';
+  taskState.forEach((task) => {
+    const isSelected = task.id === selectedTaskId;
+    taskListEl.insertAdjacentHTML(
+      'beforeend',
+      html`
         <li class="task-card ${isSelected ? 'selected' : ''} ${task.completed ? 'completed' : ''}" data-spec="003:FR-003">
           <label class="task-main">
             <input class="feature-target" data-target="task-toggle-${task.id}" data-spec="003:FR-006" type="checkbox" ${task.completed ? 'checked' : ''} />
@@ -118,9 +123,9 @@ function renderTaskList() {
             <button class="task-open-button feature-target btn btn-secondary ${isSelected ? 'selected' : ''}" data-target="task-open" data-task-id="${task.id}" data-spec="003:FR-005">Open</button>
           </div>
         </li>
-      `;
-    })
-    .join('');
+      `
+    );
+  });
 }
 
 function openTask(taskId) {

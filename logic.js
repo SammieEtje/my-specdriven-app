@@ -10,6 +10,7 @@ export const FEATURE_SPECS = [
       clarify: 'The demo confirms the action happens from the main dashboard without a separate workflow.',
       plan: 'The simplest solution is a single input and a primary button, with no extra navigation.',
       tasks: 'Acceptance criteria cover adding a task, showing it immediately, and preventing blank entries.',
+      // T032 Known 001 gap, see 004 core-flow test "001:US5 add a task from the input"
       implement: 'The button dispatches a task creation action and appends it to the in-memory task list.'
     }
   },

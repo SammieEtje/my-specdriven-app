@@ -19,7 +19,7 @@ status checks: `code`, `security` and `usability`.
 The workflow has read-only permissions and pinned actions. The repository becomes public, so
 branch protection can enforce all three checks. The gate's own static checks find one real defect
 in today's code (unescaped `innerHTML` with user-editable task fields), which this feature fixes.
-By the owner's choice, the usability check stays red until the five 001 gaps are fixed.
+By the owner's choice, the usability check stays red until the four 001 gaps are fixed.
 
 ## Technical Context
 
@@ -121,5 +121,5 @@ package.json, package-lock.json  # devDependencies + scripts (lint, format:check
 |-----------|------------|-------------------------------------|
 | Eight dev dependencies (Principle I asks for the simplest solution) | Each covers one spec category that the platform doesn't: lint and format (FR-003), XSS lint (FR-007), browser automation and axe (FR-009 to FR-011). | Hand-written checks would be less complete and harder to trust than standard tools. None of these ship to the browser, so FR-017 holds. |
 | The `security` job has `security-events: write` (FR-014 says read-only on code) | CodeQL needs it to publish findings in the PR. | It grants writing code-scanning alerts, not repository contents. Dropping CodeQL would leave FR-007 to a single lint rule. |
-| The usability check fails on today's code by design | The owner chose to test the full 001 flow without exceptions (clarification Q1), which makes the five 001 gaps visible and blocking. | Skipping those steps would hide known defects, which is the problem this gate exists to fix. |
+| The usability check fails on today's code by design | The owner chose to test the full 001 flow without exceptions (clarification Q1), which makes the four 001 gaps visible and blocking. | Skipping those steps would hide known defects, which is the problem this gate exists to fix. |
 | One-time reformat of existing files | `prettier --check` (FR-003) cannot pass otherwise. | Lint-only formatting rules are less complete. The churn is limited by matching the current style (R7). |

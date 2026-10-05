@@ -17,8 +17,8 @@ npm run test:e2e       # Playwright + axe: a11y, keyboard, 001 core flow
 ```
 
 **Expected on today's code** (after the R6 fix): everything passes except `npm run test:e2e`,
-which fails on exactly five core-flow tests: add a task, filters, empty state, Close-button focus
-and persist and reload. Those are the known 001 gaps (spec SC-004).
+which fails on exactly four core-flow tests: add a task, filters, empty state, and persist and
+reload. Those are the known 001 gaps (spec SC-004).
 
 ## 2. Seeded violations (SC-003)
 
@@ -67,7 +67,7 @@ gh repo edit SammieEtje/my-specdriven-app --enable-secret-scanning --enable-secr
 ```
 
 **Order** (owner decision, analyze C1):
-1. The five 001 gaps are fixed in their own branch and PR, so `usability` turns green.
+1. The four 001 gaps are fixed in their own branch and PR, so `usability` turns green.
 2. Make the repository public.
 3. Merge PR #1 (003), then the 001 fix, then this feature's PR, each with all three checks green.
 4. Then switch protection on. Every later change goes through the gate.
@@ -79,3 +79,25 @@ gh api repos/SammieEtje/my-specdriven-app/branches/main/protection --jq '.requir
 ```
 
 It should print `["code","security","usability"]`.
+
+## Results (T031, 2026-10-05)
+
+Run locally on macOS with Node 26 and Playwright Chromium 153.
+
+| Command | Result |
+|---------|--------|
+| `npm test` | 40 of 40 pass: 17 from 001 and 003, plus the trace, privacy, workflow, html and a11y-exceptions tests |
+| `npm run lint` | 0 errors, 0 warnings. A planted unused variable is reported as an `::error` annotation with file, line and rule |
+| `npm run format:check` | clean, after the T009 baseline (commit `f04334a`) |
+| `npm run lint:security` | clean after the R6 fix. Before it, 2 errors (unsafe `innerHTML` in `renderPhaseList` and `renderTaskList`) |
+| `npm audit --audit-level=high` | 0 vulnerabilities |
+| `npm run test:e2e` | 9 pass and 4 fail. The failures are exactly the 001 gaps: add a task, filters, empty state, and persist and reload |
+| gitleaks | not run locally (no Docker daemon). It first runs in CI on the PR (T034) |
+
+**Defects the gate found and this feature fixed:**
+- XSS through a task title typed in the dialog (R4). The payload `<img src=x onerror=…>` now renders as text, checked in Chromium.
+- axe `scrollable-region-focusable` (serious) on `#trace-object`: the scrollable trace code block couldn't be reached by keyboard (WCAG 2.1.1). It now has `tabindex="0"` and `aria-label="Trace object"`.
+
+**Correction to the 2026-10-05 manual test:** that test reported "Close returns focus to the page" as a fifth 001 gap. Measured in headless and headed Chrome, the Close button does return focus to Open; the earlier check read focus too early. The baseline is therefore four gaps (spec SC-004 updated).
+
+**Seen while testing, outside 001 FR-012:** closing the dialog by clicking its backdrop leaves focus on the closed `<dialog>` instead of the Open button. FR-012 only names the Close button and Escape, so this is noted, not tested.

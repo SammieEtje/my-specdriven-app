@@ -89,7 +89,7 @@ Als bijdrager wil ik in de pull request in één oogopslag zien welke controle f
 
 - **Pull request uit een fork**: de controles draaien, maar zonder toegang tot geheimen van de repository en zonder schrijfrechten.
 - **Alleen documentatie gewijzigd** (bijvoorbeeld alleen `specs/`): de verplichte controles moeten toch een status rapporteren, zodat de merge niet blijft hangen op een ontbrekende status.
-- **Bestaande problemen in `main`**: bekende gaten uit feature 001 (taak toevoegen, filteren, bewaren, lege staat, focus na sluiten) bestaan al vóór deze feature. De bruikbaarheidscontrole test ze gewoon mee en faalt daarop, totdat ze in een vervolg op feature 001 zijn hersteld. Merges naar `main` zijn tot dan geblokkeerd. Dat is bewust: de poort maakt zichtbaar wat de specificatie belooft maar de code niet doet.
+- **Bestaande problemen in `main`**: bekende gaten uit feature 001 (taak toevoegen, filteren, bewaren en lege staat) bestaan al vóór deze feature. De bruikbaarheidscontrole test ze gewoon mee en faalt daarop, totdat ze in een vervolg op feature 001 zijn hersteld. Merges naar `main` zijn tot dan geblokkeerd. Dat is bewust: de poort maakt zichtbaar wat de specificatie belooft maar de code niet doet.
 - **Externe dienst onbereikbaar** (bijvoorbeeld de bron van kwetsbaarheidsgegevens): de controle faalt zichtbaar met de oorzaak, in plaats van stilzwijgend te slagen.
 - **Vals-positieve bevinding**: een bijdrager moet een bevinding expliciet en zichtbaar kunnen uitzonderen, met een reden die in de repository wordt vastgelegd.
 - **Controle duurt te lang of blijft hangen**: elke controle heeft een tijdslimiet en faalt bij overschrijding.
@@ -129,7 +129,7 @@ Als bijdrager wil ik in de pull request in één oogopslag zien welke controle f
 - **SC-001**: 100% van de pull requests naar `main` krijgt automatisch een uitkomst van alle controles, zonder handmatige stap.
 - **SC-002**: Alle controles samen zijn binnen 10 minuten na een push klaar.
 - **SC-003**: Elk van de vijf bewust ingebrachte problemen uit de onafhankelijke tests (falende test, onbekend `data-spec`-ID, nep-geheim, externe tracker, verwijderd veldlabel) wordt gedetecteerd en laat de bijbehorende controle falen.
-- **SC-004**: Code en beveiliging geven 0 vals-positieve fouten op de huidige code. De bruikbaarheidscontrole faalt op de huidige code op precies de vijf bekende gaten uit feature 001 en op niets anders; na het herstel daarvan slaagt een pull request zonder problemen voor alle controles.
+- **SC-004**: Code en beveiliging geven 0 vals-positieve fouten op de huidige code. De bruikbaarheidscontrole faalt op de huidige code op precies de vier bekende gaten uit feature 001 (taak toevoegen, filteren, lege staat, bewaren) en op niets anders; na het herstel daarvan slaagt een pull request zonder problemen voor alle controles.
 - **SC-005**: Een bijdrager kan uit de statusmelding in de pull request binnen 1 minuut bepalen welke controle faalde en in welk bestand het probleem zit.
 - **SC-006**: Geen enkele controle heeft schrijfrechten op code, instellingen of geheimen van de repository, en een pull request uit een fork krijgt geen toegang tot geheimen. De enige schrijfbevoegdheid is het publiceren van meldingen van de statische analyse in de beveiligingscontrole.
 

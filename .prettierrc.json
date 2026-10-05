@@ -2,5 +2,13 @@
   "singleQuote": true,
   "printWidth": 120,
   "trailingComma": "none",
-  "overrides": [{ "files": "*.css", "options": { "singleQuote": false } }]
+  "overrides": [
+    {
+      "files": "*.css",
+      "options": {
+        "singleQuote": false
+      }
+    }
+  ],
+  "embeddedLanguageFormatting": "off"
 }
