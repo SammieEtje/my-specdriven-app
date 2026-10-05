@@ -27,3 +27,12 @@
   - ESLint, Prettier and a trace check; gitleaks, npm audit with dependency review, CodeQL, no-unsanitized and a privacy check; Playwright with axe.
   - Read-only token, SHA-pinned actions, a 10-minute timeout per job.
 - Finding: the current `app.js` writes user-editable task fields to `innerHTML` (XSS). It is fixed with an escaping `html` tagged template (R6).
+
+## Phase: tasks
+
+- Date: 2026-10-05
+- Branch: `004-ci-quality-gates`
+- Tasks: `specs/004-ci-quality-gates/tasks.md`
+- Trigger: `/speckit-tasks`
+- Result: 36 tasks across Setup, Foundational, US1 to US4 and Polish, with tests first.
+- Outward-facing steps need explicit owner confirmation: T034 (push and PR), T035 (seeded-violation PRs) and T036 (public repository and branch protection).
