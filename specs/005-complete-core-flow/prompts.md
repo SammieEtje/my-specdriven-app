@@ -45,3 +45,14 @@
   - I1: FR-005 now names the "Task added to Active" notice; `#app-status` carries `005:FR-005`.
   - S1: no storage clearing in the e2e setup.
   - L1: a `.meta-actions` wrapper in the footer.
+
+## Phase: implement
+
+- Date: 2026-10-05
+- Trigger: `/speckit-implement`, with T031 and T032 approved in advance
+- Result:
+  - `logic.js` gains `createTask`, `filterTasks`, `emptyStateText`, `serializeState`, `parseState` and `STORAGE_KEY`.
+  - `app.js` adds the form submit handler, the filtered render with the empty state, auto-save with blocked-storage handling, `showStatus`, and the title restore.
+  - `index.html` gets `form.composer`, `#task-input-error` and `#app-status`, plus the 005 tokens.
+- Outside the task list: an axe `aria-prohibited-attr` fix on `#trace-object`, an app-readiness guard (Add task disabled until ready) with `gotoApp`, and `scripts/serve.js` for the Playwright server (see `quickstart.md`, Results).
+- Tests: 54 node tests and 28 e2e tests, all green three times in a row.

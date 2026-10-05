@@ -21,3 +21,9 @@ export const test = base.extend({
 });
 
 export { expect };
+
+// T008 (005) Open the app and wait until its script is ready (Add task is enabled once handlers are attached)
+export async function gotoApp(page) {
+  await page.goto('/');
+  await expect(page.locator('#add-task-button')).toBeEnabled();
+}

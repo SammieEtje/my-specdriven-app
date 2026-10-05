@@ -496,6 +496,44 @@ input[type="checkbox"] {
   min-width: 0;
 }
 
+/* T007 (005) Field error: text plus a heavier border, never red text (003 FR-010, 005 FR-004) */
+.field-error {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-lh);
+  color: var(--text-primary);
+}
+
+.field-error::before {
+  content: "Error: ";
+  font-weight: var(--weight-semibold);
+}
+
+.field-error:empty {
+  display: none;
+}
+
+#task-input[aria-invalid="true"] {
+  border-color: var(--border-strong);
+  border-width: 2px;
+}
+
+/* T014 (005) Footer group and the status message (FR-005, FR-010) */
+.meta-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.app-status {
+  margin: 0;
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-lh);
+  color: var(--text-secondary);
+}
+
 /* T015 Panels stack on narrow screens, no horizontal scroll down to 360px */
 @media (max-width: 900px) {
   .app-shell {

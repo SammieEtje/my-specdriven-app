@@ -30,3 +30,28 @@ npm run lint && npm run format:check && npm run lint:security
 
 Open the PR against `main` first, so the quality gate runs (004). Expect `code`, `security` and
 `usability` to be green. Then retarget the PR to `004-ci-quality-gates` and merge (research R9).
+
+## Results (T029, 2026-10-05)
+
+Run locally on macOS, Node 26, Playwright Chromium.
+
+| Check | Result |
+|-------|--------|
+| `npm test` | 54 of 54 pass. 14 of them are new unit tests in `core-flow.test.js` |
+| `npm run lint`, `lint:security`, `format:check` | clean |
+| `npm run test:e2e` | 28 of 28 pass, in three consecutive runs. The four former 004 gaps (add, filters, empty state, persist) are green |
+| Manual 1, Enter adds | "Buy milk" appears last. The input is empty and focused |
+| Manual 2, blank title | "Enter a task title.", with `aria-describedby="task-input-error"` |
+| Manual 3, Active hides a checked-off task | covered by e2e `005:FR-005` and `005:FR-007` |
+| Manual 4, add under Completed | "Task added to Active" appears and is empty again after 4.3 s |
+| Manual 5, edit and reload, Persist | covered by e2e `005:FR-008`. Persist shows "Demo state saved" |
+| Manual 6, broken storage | the two example tasks, with no error |
+| Manual 7, cleared dialog title | covered by e2e `005:FR-011` |
+
+**Found and fixed while implementing** (outside the task list, recorded here):
+
+1. **axe `aria-prohibited-attr` (serious) on `#trace-object`.** The `aria-label` added in 004 isn't allowed on a plain `<pre>`. axe only reported it intermittently. It now has `role="region"`, which makes the label valid.
+2. **A race in the browser tests.** `page.goto` sometimes returned before `app.js` had run, so pressing Enter submitted the form natively and reloaded `/?`.
+   - In the app, "Add task" starts `disabled` and is enabled once the submit handler is attached, so a native submit can't happen.
+   - In the tests, a shared `gotoApp(page)` helper in `e2e/fixtures.js` waits for that.
+3. **Flaky local test server.** Under parallel workers, `python3 -m http.server` stalled or refused connections (its listen backlog is small). Playwright's `webServer` now runs `node scripts/serve.js`, a small dependency-free static server. `npm start` stays on Python, as the 004 contract specifies.

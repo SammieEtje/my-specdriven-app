@@ -1,8 +1,8 @@
 // T024 Every control is reachable by keyboard and shows visible focus (004:FR-010, constitution IV)
-import { test, expect } from './fixtures.js';
+import { test, expect, gotoApp } from './fixtures.js';
 
 test('004:FR-010 every control receives visible focus', async ({ page }) => {
-  await page.goto('/');
+  await gotoApp(page);
 
   const expected = await page.$$eval('button, input, textarea, [tabindex="0"]', (elements) =>
     elements
