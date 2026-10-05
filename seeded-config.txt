@@ -1,0 +1,2 @@
+# seeded test value for gitleaks, not a real credential
+api_key = "Zx9q2LmT7vR4kW8pN3bY6cH1sD5fG0jA"
