@@ -7,7 +7,7 @@ test('buildTrace returns phase-by-phase spec decisions for a selected element', 
   const trace = buildTrace('add-task-button', spec);
 
   assert.equal(trace.selectedElement, 'add-task-button');
-  assert.equal(trace.featureId, 'spec-01');
+  assert.equal(trace.featureId, 'spec-99');
   assert.ok(Array.isArray(trace.phases));
   assert.equal(trace.phases.length, 5);
   assert.ok(trace.phases.every((phase) => phase.decision && phase.phase));
