@@ -20,3 +20,10 @@
   - An English `README.md` per `contracts/readme-outline.md`.
   - `readme.test.js` for offline checks.
 - The English language deviates from the constitution; this is recorded in Complexity Tracking.
+
+## Phase: tasks
+
+- Date: 2026-10-06
+- Trigger: `/speckit-tasks`
+- Result: 16 tasks, with `readme.test.js` checks first per story.
+- T015 (push and PR) needs owner confirmation. T016 checks GitHub's license detection after the merge.
