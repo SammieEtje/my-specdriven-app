@@ -28,7 +28,7 @@ description: "Task list for README and license"
 
 ## Phase 1: Setup
 
-- [ ] T001 Create `readme.test.js` (node:test, `node:fs` only) with the helpers it needs:
+- [X] T001 Create `readme.test.js` (node:test, `node:fs` only) with the helpers it needs:
   - `read(path)`;
   - `headings(markdown)`, returning the `#` and `##` lines in order;
   - `section(markdown, heading)`, returning the text up to the next `##`;
@@ -53,7 +53,7 @@ None. The three documents are independent. US3's `LICENSE` and notices files may
 
 ### Tests for User Story 1 ⚠️
 
-- [ ] T002 [US1] Add to `readme.test.js`:
+- [X] T002 [US1] Add to `readme.test.js`:
   - `006:FR-001 README has the required sections in order`: the `##` headings equal exactly `Why this exists`, `What you can see`, `How it was built`, `Features`, `Lessons learned`, `Run it`, `Test it`, `Quality gate and contributing`, `Known issues`, `License` and `Acknowledgements`, and the first line is `# Spec-driven to-do demo`;
   - `006:FR-012 README and notices follow the writing rules`: no `—` and no `\p{Extended_Pictographic}` in `README.md` or `THIRD_PARTY_NOTICES.md` (a file that doesn't exist yet fails the test);
   - `006:SC-005 every relative link resolves`: each `relativeLinks` target in `README.md` and `THIRD_PARTY_NOTICES.md` exists on disk;
@@ -68,7 +68,7 @@ None. The three documents are independent. US3's `LICENSE` and notices files may
 
 ### Implementation for User Story 1
 
-- [ ] T003 [US1] Create `README.md` with the title, summary and badge from contract item 0, and the US1 sections from contract items 1 to 5, 9 and 11. The badge is `[![Quality gate](https://github.com/SammieEtje/my-specdriven-app/actions/workflows/quality-gate.yml/badge.svg)](https://github.com/SammieEtje/my-specdriven-app/actions/workflows/quality-gate.yml)`.
+- [X] T003 [US1] Create `README.md` with the title, summary and badge from contract item 0, and the US1 sections from contract items 1 to 5, 9 and 11. The badge is `[![Quality gate](https://github.com/SammieEtje/my-specdriven-app/actions/workflows/quality-gate.yml/badge.svg)](https://github.com/SammieEtje/my-specdriven-app/actions/workflows/quality-gate.yml)`.
   - **Why this exists:** follows contract item 1.
   - **What you can see:** the board and the trace panel.
   - **How it was built:** the phases, links to `.specify/memory/constitution.md` and `specs/`, the tag pattern `<feature>-<phase>`, the `prompts.md` per feature, and a note that the specs are in Dutch.
@@ -96,7 +96,7 @@ None. The three documents are independent. US3's `LICENSE` and notices files may
 
 ### Tests for User Story 2 ⚠️
 
-- [ ] T005 [US2] Add `006:FR-006 every command in Run it and Test it exists` to `readme.test.js`. For each line in the code blocks of those two sections that starts with `npm` or `npx`, it must be one of:
+- [X] T005 [US2] Add `006:FR-006 every command in Run it and Test it exists` to `readme.test.js`. For each line in the code blocks of those two sections that starts with `npm` or `npx`, it must be one of:
   - `npm ci`;
   - `npm start`;
   - `npm test`;
@@ -107,7 +107,7 @@ None. The three documents are independent. US3's `LICENSE` and notices files may
 
 ### Implementation for User Story 2
 
-- [ ] T006 [US2] In `README.md`, replace the placeholder lines under `Run it`, `Test it` and `Quality gate and contributing` with the content from contract items 6 to 8:
+- [X] T006 [US2] In `README.md`, replace the placeholder lines under `Run it`, `Test it` and `Quality gate and contributing` with the content from contract items 6 to 8:
   - **Run it:** prerequisites (Node 24 or newer, Python 3), then `npm ci`, `npm start`, then open `http://localhost:8000`.
   - **Test it:** one command per line with a one-line purpose each: `npm test`, `npm run lint`, `npm run format:check`, `npm run lint:security`, `npx playwright install chromium` (once) and `npm run test:e2e`.
   - **Quality gate and contributing:** the three required checks and what each runs (from `specs/004-ci-quality-gates/contracts/quality-gate.md`); branch protection on `main` that applies to admins; the flow (branch, Spec Kit phases, PR, three green checks, merge).
@@ -125,7 +125,7 @@ None. The three documents are independent. US3's `LICENSE` and notices files may
 
 ### Tests for User Story 3 ⚠️
 
-- [ ] T008 [P] [US3] Add to `readme.test.js`:
+- [X] T008 [P] [US3] Add to `readme.test.js`:
   - `006:FR-008 LICENSE is the MIT license for Sander Ettema`: the first line is `MIT License`; it contains `Copyright (c) 2026 Sander Ettema`; and it contains the MIT sentences `Permission is hereby granted, free of charge` and `THE SOFTWARE IS PROVIDED "AS IS"`;
   - `006:FR-009 third-party notices cover every external component`: `THIRD_PARTY_NOTICES.md` contains `IBM Plex`, `OFL-1.1`, a link to `fonts/OFL.txt`, `Spec Kit`, `Copyright GitHub, Inc.`, `.specify/` and `Polderworks design system`, and every path it names exists;
   - `006:FR-010 trademarks are excluded`: both the README `License` section and the notices file contain `Polderworks` and `Loods` in a sentence with `trademark`.
@@ -134,13 +134,13 @@ None. The three documents are independent. US3's `LICENSE` and notices files may
 
 ### Implementation for User Story 3
 
-- [ ] T009 [P] [US3] Create `LICENSE` with the standard MIT License text, exactly as published by the OSI (data-model: "byte-for-byte … apart from the copyright line"), with the line `Copyright (c) 2026 Sander Ettema`. Add no other text (research R1)
-- [ ] T010 [P] [US3] Create `THIRD_PARTY_NOTICES.md` per data-model "THIRD_PARTY_NOTICES.md". Give each entry the fields Name, Paths, Origin, License, Copyright and License text:
+- [X] T009 [P] [US3] Create `LICENSE` with the standard MIT License text, exactly as published by the OSI (data-model: "byte-for-byte … apart from the copyright line"), with the line `Copyright (c) 2026 Sander Ettema`. Add no other text (research R1)
+- [X] T010 [P] [US3] Create `THIRD_PARTY_NOTICES.md` per data-model "THIRD_PARTY_NOTICES.md". Give each entry the fields Name, Paths, Origin, License, Copyright and License text:
   - IBM Plex: points to `fonts/OFL.txt`;
   - Spec Kit (version 1.0.11): origin `https://github.com/github/spec-kit`, with the full MIT text inline and `Copyright GitHub, Inc.`;
   - Polderworks design system: MIT through `LICENSE`, plus the trademark paragraph (research R3);
   - Development tools: "not redistributed; installed from npm into the git-ignored `node_modules/`", with license families.
-- [ ] T011 [US3] In `README.md`, replace the placeholder under `License` with:
+- [X] T011 [US3] In `README.md`, replace the placeholder under `License` with:
   - one line linking to `LICENSE` (MIT);
   - one line linking to `THIRD_PARTY_NOTICES.md`;
   - the trademark paragraph from research R3.
