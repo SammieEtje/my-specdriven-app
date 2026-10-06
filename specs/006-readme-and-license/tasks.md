@@ -58,7 +58,11 @@ None. The three documents are independent. US3's `LICENSE` and notices files may
   - `006:FR-012 README and notices follow the writing rules`: no `—` and no `\p{Extended_Pictographic}` in `README.md` or `THIRD_PARTY_NOTICES.md` (a file that doesn't exist yet fails the test);
   - `006:SC-005 every relative link resolves`: each `relativeLinks` target in `README.md` and `THIRD_PARTY_NOTICES.md` exists on disk;
   - `006:FR-004 Features lists 001 to 006 with links to their specs`: the Features section contains a link to `specs/00N-…/spec.md` for N from 1 to 6, and the 002 row contains `not built`;
-  - `006:FR-011 acknowledges AI assistance`: Acknowledgements mentions `Claude Code` and `Spec Kit`.
+  - `006:FR-011 acknowledges AI assistance`: Acknowledgements mentions `Claude Code` and `Spec Kit`;
+  - `006:FR-002 Why this exists states the purpose`: the section contains `Spec Kit`, `AI assistant` and `data-spec` (analyze H1);
+  - `006:FR-003 How it was built explains the workflow`: the section links to `.specify/memory/constitution.md`, names each of `specify`, `clarify`, `plan`, `tasks`, `analyze`, `implement` and `converge`, mentions `prompts.md`, and shows a tag example matching `/\b00\d-(specify|plan|tasks|analyze|implement)\b/` (analyze H1);
+  - `006:FR-005 Lessons learned is honest and specific`: the section contains each of `001`, `XSS`, `accessibility`, `Close`, `server` and `outage` (case-insensitive), the five lessons from contract item 5 (analyze H1);
+  - `006:edge no personal data`: `README.md` and `THIRD_PARTY_NOTICES.md` contain no email address (`/[\w.+-]+@[\w-]+\.[\w.]+/`) (analyze G2).
 
   Run them and confirm they fail, because `README.md` doesn't exist yet
 
@@ -99,7 +103,7 @@ None. The three documents are independent. US3's `LICENSE` and notices files may
   - `npx playwright install chromium`;
   - `npm run <name>`, where `<name>` is a key of `package.json` `scripts`.
 
-  Also assert that `Run it` mentions `http://localhost:8000`, and that `Quality gate and contributing` names `code`, `security` and `usability`. Run it and confirm it fails
+  Also assert that `Run it` mentions `http://localhost:8000`, and that `Quality gate and contributing` names `code`, `security` and `usability` and contains `pull request` and `branch protection` (FR-007, analyze H1). Run it and confirm it fails
 
 ### Implementation for User Story 2
 
@@ -149,9 +153,10 @@ None. The three documents are independent. US3's `LICENSE` and notices files may
 
 - [ ] T012 Run `npm run format`, then `npm test`, `npm run lint`, `npm run format:check` and `npm run lint:security`. All must pass. `npm run test:e2e` is unaffected, but run it once to confirm
 - [ ] T013 Check every external `https://` link in `README.md` and `THIRD_PARTY_NOTICES.md` with `curl -sIL -o /dev/null -w '%{http_code}'`. Each must return 200; the badge URL may return 200 or 404 until the PR is merged. Record the results under "Links" in `specs/006-readme-and-license/quickstart.md`
+- [ ] T017 Reader test (SC-001, analyze G1): ask someone new to the repository (or the owner as a stand-in, noted as such) to read only `README.md` for at most 3 minutes, then state in their own words what the repository is and why it exists. Record the answer, the reader type and whether it matches FR-002 under "Reader test" in `specs/006-readme-and-license/quickstart.md`. If it doesn't match, improve `Why this exists` and repeat. Run this before T014 (it is numbered T017 because it was added after analysis)
 - [ ] T014 Append `## Phase: implement` to `specs/006-readme-and-license/prompts.md`, commit and tag `006-implement`
 - [ ] T015 **After confirmation**: push `006-readme-and-license` with its tags and open a PR to `main`. The three checks must be green
-- [ ] T016 After the PR is merged: run `gh api repos/SammieEtje/my-specdriven-app --jq .license.spdx_id` and check that it prints `MIT` (SC-003). Record the result in `quickstart.md` through a small follow-up PR, or in the next feature's PR
+- [ ] T016 After the PR is merged: run `gh api repos/SammieEtje/my-specdriven-app --jq .license.spdx_id` and check that it prints `MIT` (SC-003). `main` is protected, so record the result in `specs/006-readme-and-license/quickstart.md` in the first commit of the next feature branch, and mention it in that feature's `prompts.md`. That way it still lands in a phase commit (analyze U1)
 
 ---
 
@@ -160,7 +165,7 @@ None. The three documents are independent. US3's `LICENSE` and notices files may
 - **T001** comes first.
 - **README.md, in sequence**: T002 → T003 → T004, then T005 → T006 → T007, then T011.
 - **US3 files, in parallel with US1 and US2**: T008, T009 and T010 can run any time after T001; T011 needs T003.
-- **Polish**: after all stories. T015 needs your confirmation, and T016 runs after the merge.
+- **Polish**: after all stories, in the order T012, T013, T017, T014, T015, T016. T015 needs your confirmation, and T016 runs after the merge.
 
 ## Parallel Example: User Story 3
 

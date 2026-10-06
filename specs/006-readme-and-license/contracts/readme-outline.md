@@ -10,8 +10,9 @@ follow each one.
    Traceability from every UI element (`data-spec`) to the requirement and the decision.
 2. `## What you can see` (US1): the to-do board, and the decision-trace panel that shows the
    spec, phases and decisions behind any element you click.
-3. `## How it was built` (FR-003): the phases (constitution, specify, clarify, plan, tasks,
-   analyze, implement, converge), with links to `.specify/memory/constitution.md` and
+3. `## How it was built` (FR-003): the constitution first, then per feature the phases specify,
+   clarify, plan, tasks, analyze and implement, with converge as a check after implement (used in
+   practice, not yet in the constitution's workflow list), with links to `.specify/memory/constitution.md` and
    `specs/<feature>/`. Each phase ends with a commit, a `<feature>-<phase>` tag, and the prompt in
    `prompts.md`. It notes that the specs are written in Dutch.
 4. `## Features` (FR-004): a table of 001 to 006, each with a one-line outcome and a link to its

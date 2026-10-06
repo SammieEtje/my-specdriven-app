@@ -49,7 +49,7 @@ A new `readme.test.js` verifies the structure, links, writing rules and license 
 | Principle | Status | Notes |
 |-----------|--------|-------|
 | I. Eenvoud boven alles | Pass | Plain files and no dependency. The test uses only node built-ins. |
-| II. Elke requirement is testbaar | Pass | FR-001, FR-006 and FR-008 to FR-012 are covered by `readme.test.js`. FR-002 to FR-005 and FR-007 (content quality) are reviewed against the contract outline, with the headings asserted by the test and the content checked by the SC-001 reader test in the quickstart. |
+| II. Elke requirement is testbaar | Pass | All FRs are covered by `readme.test.js`. FR-002, FR-003, FR-005 and FR-007 get content checks with required terms and links per section (analyze H1); FR-004 checks the features table, and FR-006 the commands. The quality of the writing is also checked by the SC-001 reader test (T017). |
 | III. Traceerbaarheid | Pass | No UI elements. Task-ID comments go in the test, alongside `prompts.md` and the `006-<phase>` tags. |
 | IV. Toegankelijk | Pass | The README uses a proper heading hierarchy, descriptive link text, and alt text for any image. |
 | V. Gebruikersdata blijft lokaal | Pass | No change to the app. The README badge is an image on GitHub, not part of the demo. |
