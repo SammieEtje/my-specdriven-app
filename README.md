@@ -48,7 +48,7 @@ Each feature then goes through the same phases, each one a Spec Kit command:
    code is written.
 6. **implement**: build the tasks and mark them done.
 7. **converge**: compare the finished code with the specification and add tasks for anything still missing. This step
-   was used in practice from feature 003 on; the constitution does not list it yet.
+   was used for feature 003; the constitution does not list it yet.
 
 Each phase ends with a commit and a git tag named `<feature>-<phase>`, for example `004-plan`. The prompt that started
 each phase and the decisions made in it are kept in a `prompts.md` file per feature. Tagging started with feature 003.
@@ -74,8 +74,8 @@ The process did not prevent every mistake. It made them visible, which is the po
 
 - **Ticked boxes are not evidence.** In feature 001, the tasks for adding a task, filtering, the empty state and saving
   were all marked done, but the code never did any of it. Nobody noticed until the browser tests of the 004 quality
-  gate tried the full flow and failed. Feature 005 then built what 001 had promised. Since then, a separate converge
-  step compares the code with the specification instead of trusting the task list.
+  gate tried the full flow and failed. Feature 005 then built what 001 had promised. The converge step exists to catch this:
+  it compares the code with the specification instead of trusting the task list.
 - **The quality gate found real defects on its first run.** Task titles typed in the dialog were inserted into the page
   as HTML, which allowed an XSS attack. The accessibility checks also found two defects: the scrollable trace block could
   not be reached by keyboard, and its label was not valid on that element. All three were fixed. The evidence is in

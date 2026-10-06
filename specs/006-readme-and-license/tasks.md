@@ -78,7 +78,7 @@ None. The three documents are independent. US3's `LICENSE` and notices files may
   - **Acknowledgements:** contract item 11.
 
   Leave the `Run it`, `Test it`, `Quality gate and contributing` and `License` headings in place with a single line `See below.`, which US2 and US3 replace. Make sure T002 passes, apart from the notices file, which US3 adds
-- [ ] T004 [US1] Check every factual claim in the US1 sections against its source and fix any mismatch:
+- [X] T004 [US1] Check every factual claim in the US1 sections against its source and fix any mismatch:
   - each feature outcome against its spec or plan;
   - the lessons against `quickstart.md` Results of 004 and 005;
   - the phases against `.specify/memory/constitution.md` "Ontwikkelworkflow";
@@ -113,7 +113,7 @@ None. The three documents are independent. US3's `LICENSE` and notices files may
   - **Quality gate and contributing:** the three required checks and what each runs (from `specs/004-ci-quality-gates/contracts/quality-gate.md`); branch protection on `main` that applies to admins; the flow (branch, Spec Kit phases, PR, three green checks, merge).
 
   Make sure T005 passes
-- [ ] T007 [US2] Fresh-clone check (SC-002): `git clone` the local repository into the scratchpad directory, follow only the README's "Run it" and "Test it" steps, and record the outcome of each step under "Fresh clone" in `specs/006-readme-and-license/quickstart.md`. If a step fails, fix the README, not the environment
+- [X] T007 [US2] Fresh-clone check (SC-002): `git clone` the local repository into the scratchpad directory, follow only the README's "Run it" and "Test it" steps, and record the outcome of each step under "Fresh clone" in `specs/006-readme-and-license/quickstart.md`. If a step fails, fix the README, not the environment
 
 ---
 
@@ -151,8 +151,8 @@ None. The three documents are independent. US3's `LICENSE` and notices files may
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-- [ ] T012 Run `npm run format`, then `npm test`, `npm run lint`, `npm run format:check` and `npm run lint:security`. All must pass. `npm run test:e2e` is unaffected, but run it once to confirm
-- [ ] T013 Check every external `https://` link in `README.md` and `THIRD_PARTY_NOTICES.md` with `curl -sIL -o /dev/null -w '%{http_code}'`. Each must return 200; the badge URL may return 200 or 404 until the PR is merged. Record the results under "Links" in `specs/006-readme-and-license/quickstart.md`
+- [X] T012 Run `npm run format`, then `npm test`, `npm run lint`, `npm run format:check` and `npm run lint:security`. All must pass. `npm run test:e2e` is unaffected, but run it once to confirm
+- [X] T013 Check every external `https://` link in `README.md` and `THIRD_PARTY_NOTICES.md` with `curl -sIL -o /dev/null -w '%{http_code}'`. Each must return 200; the badge URL may return 200 or 404 until the PR is merged. Record the results under "Links" in `specs/006-readme-and-license/quickstart.md`
 - [ ] T017 Reader test (SC-001, analyze G1): ask someone new to the repository (or the owner as a stand-in, noted as such) to read only `README.md` for at most 3 minutes, then state in their own words what the repository is and why it exists. Record the answer, the reader type and whether it matches FR-002 under "Reader test" in `specs/006-readme-and-license/quickstart.md`. If it doesn't match, improve `Why this exists` and repeat. Run this before T014 (it is numbered T017 because it was added after analysis)
 - [ ] T014 Append `## Phase: implement` to `specs/006-readme-and-license/prompts.md`, commit and tag `006-implement`
 - [ ] T015 **After confirmation**: push `006-readme-and-license` with its tags and open a PR to `main`. The three checks must be green
