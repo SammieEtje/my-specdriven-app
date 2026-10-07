@@ -40,3 +40,19 @@
   - I1: FR-004 now covers 001 to 006.
   - I2: converge is described as a check step after implement.
   - U1: T016's result is recorded on the next feature branch, because `main` is protected.
+
+## Phase: implement
+
+- Date: 2026-10-06 and 2026-10-07
+- Trigger: `/speckit-implement`
+- Result:
+  - `LICENSE`: the MIT text identical to upstream, apart from `Copyright (c) 2026 Sander Ettema`.
+  - `THIRD_PARTY_NOTICES.md`: IBM Plex, Spec Kit (full upstream MIT text), the Polderworks design system with the trademark exclusion, and the dev tools.
+  - `README.md` in English, with 11 sections.
+  - `readme.test.js` with 14 checks.
+- Corrections found by the fact check:
+  - Converge was only used for 003.
+  - eslint-plugin-no-unsanitized is MPL-2.0.
+- Test fixes: ©, ® and ™ are allowed as text symbols, and the section term match is case-insensitive.
+- A fresh clone passes all README steps. External links return 200.
+- Reader test: the owner stood in and judged the README fine. This is weaker evidence; see the quickstart.

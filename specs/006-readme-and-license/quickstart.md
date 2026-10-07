@@ -57,3 +57,9 @@ Cloned into a temporary directory, following only "Run it" and "Test it":
 | https://github.com/IBM/plex | 200 |
 | quality-gate workflow page and badge | 200 |
 | http://localhost:8000 | local only, by design |
+
+## Reader test (T017, 2026-10-07)
+
+- Reader: the owner, standing in for a new reader (as allowed by T017). The owner is not a first-time reader, so this is weaker evidence for SC-001 than a test with someone new.
+- Result: the owner opened `README.md` in the editor and judged it fine ("T017 is oke"). There was no paraphrase of the purpose in the reader's own words.
+- Follow-up: a test with someone new to the repository, recording their own words, would make SC-001 conclusive.
