@@ -21,3 +21,10 @@
   - The feature follows from the `data-spec` tokens of the selected element; `FEATURE_SPECS` and `buildTrace` are removed.
   - WAI-ARIA tabs with roving `tabindex`; one focusable scroll region.
   - SC-001 is proven by a word-for-word fidelity test over every real document.
+
+## Phase: tasks
+
+- Date: 2026-10-07
+- Trigger: `/speckit-tasks`
+- Result: 30 tasks. Foundational builds `markdown.js` and `docs.js` test-first, including the SC-001 fidelity test over every document. US1 has 10 tasks, US2 2 and US3 5.
+- T030 (push and PR) needs owner confirmation.
