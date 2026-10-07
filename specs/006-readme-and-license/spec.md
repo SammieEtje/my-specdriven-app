@@ -82,8 +82,8 @@ Als bezoeker of ontwikkelaar wil ik weten onder welke voorwaarden ik de code mag
 
 - **FR-001**: De repository MOET een uitleg op de voorpagina hebben met: titel, samenvatting, waarom de repository bestaat, wat er te zien is, hoe je hem draait, hoe je de tests draait, hoe je bijdraagt, licentie en dankbetuigingen. De uitleg is in het Engels, voor een internationaal publiek; de afwijking van de constitution (documentatie in het Nederlands) wordt in het plan verantwoord.
 - **FR-002**: De uitleg MOET het doel beschrijven: het zichtbaar en controleerbaar maken van spec-driven development met Spec Kit en een AI-assistent, met traceerbaarheid van elk scherm-element tot de beslissing waaruit het voortkomt.
-- **FR-003**: De uitleg MOET de werkwijze per feature samenvatten (specify, clarify, plan, tasks, analyze, implement, converge), met de bijbehorende fasetags en de plek van de prompts en beslissingen.
-- **FR-004**: De uitleg MOET een overzicht geven van de features 001 tot en met 005 (en 002 als nog niet gebouwd), elk met een zin over het resultaat en een link naar de specificatie.
+- **FR-003**: De uitleg MOET de werkwijze per feature samenvatten: de fasen uit de constitution (specify, clarify, plan, tasks, analyze, implement), met converge als controlestap na implement zoals die in de praktijk is gebruikt, de bijbehorende fasetags, en de plek van de prompts en beslissingen.
+- **FR-004**: De uitleg MOET een overzicht geven van de features 001 tot en met 006, met 002 als gespecificeerd maar nog niet gebouwd, elk met een zin over het resultaat en een link naar de specificatie.
 - **FR-005**: De uitleg MOET een eerlijk leerpuntendeel bevatten: wat het proces opleverde, wat misging en hoe het werd ontdekt en hersteld.
 - **FR-006**: De uitleg MOET werkende opdrachten geven voor installeren, starten en testen. Elke opdracht MOET op een schone kopie te volgen zijn.
 - **FR-007**: De uitleg MOET de kwaliteitspoort beschrijven (de drie verplichte controles en de branch-beveiliging) en hoe je een bijdrage indient.
