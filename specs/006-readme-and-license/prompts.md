@@ -56,3 +56,9 @@
 - Test fixes: ©, ® and ™ are allowed as text symbols, and the section term match is case-insensitive.
 - A fresh clone passes all README steps. External links return 200.
 - Reader test: the owner stood in and judged the README fine. This is weaker evidence; see the quickstart.
+
+## T016 (after merge)
+
+- Date: 2026-10-07
+- PR #11 was merged by the owner. GitHub detects the license as MIT, from `LICENSE`.
+- The result is recorded through a docs PR (`docs/006-t016-license-check`), as was done for 004 T036.
