@@ -38,6 +38,6 @@ Removed: `#trace-title`, `.trace-summary`, `#trace-feature-id`, `#trace-element`
 | Case | Text |
 |------|------|
 | `not-produced` | "The {phase} phase has not been run for feature {NNN} yet." + "Expected at {path}." |
-| `unavailable` | "This document could not be loaded." + "Open the demo through a local web server, or read it at {path}." |
+| `unavailable` | "This document could not be loaded." + "Check that the demo server is running, or read it at {path}." |
 | `unknown-feature` | "There is no folder for feature {NNN} in specs/." |
 | loading | "Loading {path}" (only visible if loading takes longer than one frame) |

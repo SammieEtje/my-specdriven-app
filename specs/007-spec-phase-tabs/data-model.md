@@ -51,7 +51,7 @@ The outcome of loading one DocumentRef, which decides what the tab panel shows.
 |-------|------|-------------|
 | `ok` | File loaded and, if a section was asked for, found. | The rendered document, with the source path above it. |
 | `not-produced` | The file is not in the manifest, the server returns 404, or the section is absent. | Callout: "This phase has not been run for feature NNN yet", with the expected path. |
-| `unavailable` | The request fails (no server, `file://`). | Callout: "This document could not be loaded", with the repository path. |
+| `unavailable` | The request fails (server stopped, request blocked). | Callout: "This document could not be loaded", with the repository path. |
 | `unknown-feature` | The feature number has no manifest entry. | Callout naming the number and stating there is no folder for it in `specs/`. |
 
 ## State transitions

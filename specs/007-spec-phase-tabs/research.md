@@ -6,8 +6,8 @@ All decisions below resolve the open points in the plan's Technical Context. Spe
 ## R1. How the browser gets the documents (FR-002, FR-003, FR-014)
 
 - **Decision**: Fetch the Markdown files from the same origin at run time, by relative path
-  (`specs/<dir>/<file>`). Only one function may call `fetch`: `loadDocument(url)` in `docs.js`, and
-  it only accepts URLs built by `docUrl(dir, file)`. `docUrl` checks both segments against the
+  (`specs/<dir>/<file>`). Only one function may call `fetch`: `loadDocument(dir, file)` in `docs.js`,
+  and its only call is `fetch(docUrl(dir, file))`. `docUrl` checks both segments against the
   manifest (R2), so no user input or document text can steer a request. Responses are cached per URL
   for the session.
 - **Rationale**: The spec requires that the tabs show the files as they are in the repository and
@@ -40,13 +40,23 @@ All decisions below resolve the open points in the plan's Technical Context. Spe
 - **Decision**: A small renderer, `markdown.js`, for the subset the documents use (see
   [contracts/markdown-subset.md](contracts/markdown-subset.md)): ATX headings, paragraphs, bullet and
   numbered lists with nesting, task items, GFM tables, fenced code, block quotes, horizontal rules,
-  and inline code, bold, italic and links. Every piece of document text goes through the existing
-  `html` tagged template (`html.js`), so it is escaped before it becomes markup. Anything the
-  renderer does not know, including raw HTML and HTML comments, appears as visible text.
+  and inline code, bold, italic and links. Anything the renderer does not know, including raw HTML and HTML comments,
+  appears as visible text.
+- **Escaping and composition** (analyze U1): the existing `html` template escapes every value,
+  including markup built earlier, so it cannot nest blocks. `html.js` therefore gets a second tagged
+  template, `markup`. It escapes values exactly like `html`, except values that `markup` itself
+  produced (a `SafeHtml` object) and arrays of them, which it inserts as they are. Only `markup` can
+  create a `SafeHtml`, so document text can never reach the output unescaped. `renderMarkdown`
+  builds everything with `markup` and returns a string. `html` stays unchanged, so its 004 tests and
+  callers are untouched.
+- **Lint**: `app.js` assigns the result with `innerHTML = renderMarkdown(...)`. The
+  `no-unsanitized` configuration lists `markup` under `escape.taggedTemplates` and `renderMarkdown`
+  under `escape.methods`, as approved escapers next to `html`. That is configuration, not an
+  exception: no disable comments.
 - **Rationale**: Principle I allows a runtime dependency only when the standard platform does not
-  suffice. A subset renderer is about 200 lines and fully testable with `node --test`. It also
-  passes the existing `no-unsanitized` lint without exceptions, because all output is built with
-  `html`.
+  suffice. A subset renderer is about 200 lines and fully testable with `node --test`.
+- **Scheme check without literals**: the link check uses `new URL(href, base).protocol === 'https:'`,
+  so no literal `https://` appears in the source (the privacy rule "remote URL" would flag it).
 - **Alternatives considered**:
   - `marked` or `markdown-it` with DOMPurify: two runtime dependencies, a CDN or vendored copy, and a
     sanitiser to configure. Rejected under principle I.
@@ -120,9 +130,10 @@ All decisions below resolve the open points in the plan's Technical Context. Spe
 ## R8. Stale responses and errors (FR-009, SC-006)
 
 - **Decision**: Each render gets an increasing request number; a response that arrives after a
-  newer request is dropped. A `404` gives "not produced yet" ("Deze fase is voor feature 002 nog
-  niet uitgevoerd"). A network error, as with `file://`, gives "could not be loaded" with the
-  repository path. Both use the callout style and never throw.
+  newer request is dropped. A `404` gives "not produced yet" ("The plan phase has not been run for feature 002 yet"). A network error (the server stopped, or the request blocked) gives "could
+  not be loaded" with the repository path. Opening `index.html` via `file://` is not a case: Chrome
+  does not load the `type="module"` script from `file://`, so the whole demo stays inert (analyze
+  I2). Both use the callout style and never throw.
 - **Rationale**: Quick clicking must not show the document of a previous selection. The two notices
   differ because the advice differs: one is a fact about the process, the other about how the demo
   was opened.
@@ -152,8 +163,10 @@ All decisions below resolve the open points in the plan's Technical Context. Spe
 
 - **Decision**: `docs.test.js` renders every document and section in the manifest, strips the tags
   from the output and decodes entities, and compares the word sequence with the word sequence of the
-  source after removing Markdown syntax characters (`#`, `*`, `` ` ``, `|`, list markers, link
-  brackets and URLs). Any dropped, added or reordered word fails the test with the file and the
+  source. Before splitting into words, both sides lose the same characters: `#`, `*`, `_`,
+  `` ` ``, `|`, `>` and `[`, `]`. From the source only, link targets `(url)`, list and task markers
+  and table separator rows are removed. Treating both sides the same keeps code such as
+  `feature_numbering` or `'**/*'` comparable (analyze A1). Any dropped, added or reordered word fails the test with the file and the
   first difference.
 - **Rationale**: This is exactly the claim in SC-001 (same text, without the Markdown syntax), and
   it runs on all real documents, so a new document with unsupported syntax fails CI instead of

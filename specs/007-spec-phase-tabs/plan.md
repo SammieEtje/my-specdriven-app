@@ -98,14 +98,16 @@ specs/007-spec-phase-tabs/
 ```text
 index.html               # aside: trace panel replaced by the spec panel (contract)
 app.js                   # renderTrace(target) now drives the panel; tabs, switchers, loading
-docs.js                  # NEW: FEATURE_DOCS, PHASES, featuresFor(), phaseDocuments(), docUrl(), loadDocument()
+docs.js                  # NEW: FEATURE_DOCS, PHASES, featuresFor(), phaseDocuments(), docUrl(), loadDocument(dir, file)
+html.js                  # markup`` tagged template and SafeHtml for composing fragments (R3)
 markdown.js              # NEW: renderMarkdown(), extractSection()
 logic.js                 # FEATURE_SPECS and buildTrace removed
 styles.css               # trace styles out; tabs, switchers, .md-body, notice in
 scripts/serve.js         # '.md' content type
 README.md                # panel description and the checkbox known issue
-eslint.security.config.js# docs.js and markdown.js added
+eslint.security.config.js# docs.js and markdown.js added; markup and renderMarkdown as approved escapers
 markdown.test.js         # NEW: syntax, escaping, links, sections
+html.test.js             # markup`` tests
 docs.test.js             # NEW: manifest vs file system, phase mapping, SC-001 fidelity
 logic.test.js            # trace tests removed
 design.test.js           # FR-009 check on the new selectors
@@ -122,7 +124,9 @@ e2e/a11y.spec.js         # axe with each tab open
 
 ## Complexity Tracking
 
-No constitution violations to justify.
+| Deviation | Why needed | Simpler alternative rejected because |
+|-----------|------------|--------------------------------------|
+| UI texts are English, while the Techniekkader says "Taal van UI en documentatie: Nederlands" | The interface has been English since 001; the new messages must match the text around them | Dutch messages only in the new panel would mix two languages on one screen. Translating the whole UI is a separate feature |
 
 Risk noted for later: elements show only the features in their own `data-spec` tokens. Most point
 to 003 and 005, few to their 001 origin (R5). Adding those tokens is a separate change.

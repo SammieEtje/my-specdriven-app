@@ -63,7 +63,7 @@ Als bezoeker die het toetsenbord of een schermlezer gebruikt, wil ik de tabs en 
 
 **Acceptance Scenarios**:
 
-1. **Given** de focus staat op de tabrij, **When** de bezoeker de pijltjestoetsen gebruikt, **Then** verplaatst de focus zich naar de vorige of volgende tab, en Enter of Spatie (of automatische activatie) toont die tab.
+1. **Given** de focus staat op de tabrij, **When** de bezoeker de pijltjestoetsen gebruikt, **Then** verplaatst de focus zich naar de vorige of volgende tab en wordt die tab direct getoond (automatische activatie); Home en End gaan naar de eerste en de laatste tab.
 2. **Given** een document is langer dan het paneel, **When** de bezoeker met Tab naar de inhoud gaat, **Then** kan hij het document met het toetsenbord scrollen.
 3. **Given** een schermlezer, **When** de bezoeker een tab kiest, **Then** wordt de naam van de fase en de actieve status voorgelezen.
 
@@ -71,7 +71,7 @@ Als bezoeker die het toetsenbord of een schermlezer gebruikt, wil ik de tabs en 
 
 ### Edge Cases
 
-- **Document ontbreekt**: feature 002 heeft alleen `spec.md` en `prompts.md`. Een tab voor een fase waarvan het document niet bestaat, toont een duidelijke melding ("Deze fase is voor feature 002 nog niet uitgevoerd") in plaats van een lege tab of een foutmelding.
+- **Document ontbreekt**: feature 002 heeft alleen `spec.md` en `prompts.md`. Een tab voor een fase waarvan het document niet bestaat, toont een duidelijke melding, in de taal van de interface (bijvoorbeeld "The plan phase has not been run for feature 002 yet") in plaats van een lege tab of een foutmelding.
 - **Document kan niet geladen worden**: als een document niet beschikbaar is (bijvoorbeeld wanneer de demo als los bestand is geopend), toont de tab een melding met het pad van het bestand in de repository, en blijft de rest van de demo werken.
 - **Zeer lange documenten**: `tasks.md` en `spec.md` kunnen honderden regels lang zijn. Het paneel blijft bruikbaar: de inhoud scrollt binnen de tab, de rest van de pagina verschuift niet.
 - **Onbekende feature in een spoor**: een element met een spoor naar een feature zonder map in `specs/` toont een melding in plaats van een fout.
@@ -110,7 +110,7 @@ Als bezoeker die het toetsenbord of een schermlezer gebruikt, wil ik de tabs en 
 - **SC-001**: Voor 100% van de bestaande documenten en secties die bij een fasetab horen (features 001 tot en met 006) is de getoonde tekst, zonder de markdown-opmaaktekens, identiek aan het bestand in de repository.
 - **SC-002**: Een bezoeker kan vanaf elk element op het scherm in hooguit 2 handelingen (element kiezen, tab kiezen) het document van een fase lezen.
 - **SC-003**: Na het kiezen van een tab staat de inhoud binnen 1 seconde in beeld bij lokaal draaien.
-- **SC-004**: De geautomatiseerde toegankelijkheidscontrole uit 004 meldt 0 overtredingen voor het paneel, met elke tab geopend.
+- **SC-004**: De geautomatiseerde toegankelijkheidscontrole uit 004 meldt 0 ernstige of kritieke overtredingen voor het paneel, met elke tab geopend.
 - **SC-005**: Alle fasetabs zijn met alleen het toetsenbord te bereiken en te openen.
 - **SC-006**: Een document dat ontbreekt of niet laadt, leidt in 100% van de gevallen tot een melding in de tab en nooit tot een fout die de rest van de demo stopt.
 

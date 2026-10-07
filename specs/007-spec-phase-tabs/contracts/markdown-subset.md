@@ -30,13 +30,19 @@ returns the text from the line `## <heading>` up to (not including) the next lin
 
 ## Safety rules (FR-010, 004 FR-007)
 
-- Every piece of document text goes through the `html` tagged template. The renderer never inserts
-  document text into markup any other way, so `npm run lint:security` passes without exceptions.
+- Every piece of document text goes through the `markup` tagged template from `html.js` (research
+  R3). It escapes like `html`, but inserts `SafeHtml` values (which only `markup` creates) and arrays
+  of them as they are, so blocks can be nested. The renderer never inserts document text into
+  markup any other way.
+- `markup` is listed under `escape.taggedTemplates` and `renderMarkdown` under `escape.methods` in
+  `eslint.security.config.js`, so `npm run lint:security` passes without disable comments.
+- The link scheme check uses `new URL(href, base).protocol`, never a literal `https://`.
 - No attribute other than `href` takes document text, and `href` only after the scheme check above.
 - `renderMarkdown('<img src=x onerror=alert(1)>')` returns a paragraph whose text is that string.
 
 ## Fidelity rule (SC-001)
 
 For every document in the manifest: the words of the rendered text (tags removed, entities decoded)
-equal the words of the source with the Markdown syntax removed, in the same order. `docs.test.js`
+equal the words of the source, in the same order. Both sides first lose `# * _ \` | > [ ]`; the
+source also loses link targets, list and task markers and table separator rows (research R10). `docs.test.js`
 checks this on all real documents.

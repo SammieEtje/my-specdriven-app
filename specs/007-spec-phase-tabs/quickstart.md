@@ -33,5 +33,5 @@ Start the demo with `node scripts/serve.js` and open `http://localhost:8000`.
 | 8 | Select an element linked to 001 and open clarify. | Notice: the clarify phase has not been run for feature 001. | FR-009 |
 | 9 | Keyboard only: Tab to the tabs, use Left, Right, Home, End, then Tab into the document and scroll with the arrow keys. | Focus is always visible. The document scrolls. | US3, FR-011, SC-005 |
 | 10 | Make the window 375 px wide. | Tabs wrap; no horizontal page scroll. | Edge case "Smalle schermen" |
-| 11 | Open `index.html` straight from disk (`file://`). | Notice: the document could not be loaded, with its path. The board still works. | Edge case, SC-006 |
+| 11 | In DevTools, block the URL pattern `*/specs/*` (Network request blocking), then click another tab. | Notice: the document could not be loaded, with its path. The board still works. | Edge case, SC-006 |
 | 12 | Click quickly between several elements. | The panel ends on the last selection's document. | Research R8 |
