@@ -156,7 +156,7 @@ None. The three documents are independent. US3's `LICENSE` and notices files may
 - [X] T017 Reader test (SC-001, analyze G1): ask someone new to the repository (or the owner as a stand-in, noted as such) to read only `README.md` for at most 3 minutes, then state in their own words what the repository is and why it exists. Record the answer, the reader type and whether it matches FR-002 under "Reader test" in `specs/006-readme-and-license/quickstart.md`. If it doesn't match, improve `Why this exists` and repeat. Run this before T014 (it is numbered T017 because it was added after analysis)
 - [X] T014 Append `## Phase: implement` to `specs/006-readme-and-license/prompts.md`, commit and tag `006-implement`
 - [ ] T015 **After confirmation**: push `006-readme-and-license` with its tags and open a PR to `main`. The three checks must be green
-- [ ] T016 After the PR is merged: run `gh api repos/SammieEtje/my-specdriven-app --jq .license.spdx_id` and check that it prints `MIT` (SC-003). `main` is protected, so record the result in `specs/006-readme-and-license/quickstart.md` in the first commit of the next feature branch, and mention it in that feature's `prompts.md`. That way it still lands in a phase commit (analyze U1)
+- [X] T016 After the PR is merged: run `gh api repos/SammieEtje/my-specdriven-app --jq .license.spdx_id` and check that it prints `MIT` (SC-003). `main` is protected, so record the result in `specs/006-readme-and-license/quickstart.md` in the first commit of the next feature branch, and mention it in that feature's `prompts.md`. That way it still lands in a phase commit (analyze U1)
 
 ---
 
