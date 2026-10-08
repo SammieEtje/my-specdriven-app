@@ -15,3 +15,10 @@
   - `hasTag` and `metaLine` as pure functions in `logic.js`.
   - The card is inserted without the tag; the tag gets its own `html` insert only when present, because `no-unsanitized` rejects conditional HTML fragments (verified).
   - No CSS change: the Open button keeps its right edge through the existing flex layout.
+
+## Phase: tasks
+
+- Date: 2026-10-08
+- Trigger: `/speckit-tasks`
+- Result: 10 tasks. Foundational adds `hasTag` and `metaLine` test-first; US1 has 2 tasks, US2 has 2.
+- T010 (push and PR) needs owner confirmation.
