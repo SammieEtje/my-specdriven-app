@@ -32,5 +32,5 @@
 ## Notes
 
 - `data-spec` in FR-005 is named because constitution III requires the trace to stay intact, not as a design choice.
-- User Story 2 (stray separators under the title) was not asked for explicitly; it is the same defect on the same card in the owner's screenshot. The owner can drop it before planning.
+- User Story 2 (stray separators under the title) was not asked for explicitly; it is the same defect on the same card in the owner's screenshot. The owner confirmed it on 2026-10-08 (analyze A1).
 - The dependency on 007 (`docs.js` manifest) is recorded under Assumptions.

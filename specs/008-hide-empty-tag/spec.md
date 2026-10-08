@@ -32,7 +32,7 @@ Als gebruiker van het takenbord wil ik bij een taak zonder tag geen leeg kader z
 
 Als gebruiker wil ik in de regel onder de taaktitel (eigenaar, tag en status) geen losse scheidingspunten zien als eigenaar of tag ontbreekt, zodat die regel alleen echte informatie toont.
 
-**Why this priority**: Hetzelfde screenshot laat bij taak 4 onder de titel een losse "·" zien, omdat eigenaar en tag allebei leeg zijn. Het is hetzelfde soort fout op dezelfde kaart, maar de gebruiker noemde het niet expliciet.
+**Why this priority**: Door de eigenaar bevestigd op 2026-10-08 (analyze A1). Hetzelfde screenshot laat bij taak 4 onder de titel een losse "·" zien, omdat eigenaar en tag allebei leeg zijn. Het is hetzelfde soort fout op dezelfde kaart, maar de gebruiker noemde het niet expliciet.
 
 **Independent Test**: Voeg een taak toe zonder eigenaar en tag: onder de titel staat geen losse "·". Vink hem af: de regel toont alleen "Completed".
 
@@ -60,7 +60,7 @@ Als gebruiker wil ik in de regel onder de taaktitel (eigenaar, tag en status) ge
 - **FR-002**: Een taak zonder tag MAG GEEN tagkader in de pagina hebben, ook geen verborgen of leeg element dat ruimte inneemt of door hulptechnologie wordt voorgelezen.
 - **FR-003**: Een wijziging van de tag in de taakdialoog MOET direct zichtbaar zijn op de kaart: het kader verschijnt of verdwijnt zonder herladen.
 - **FR-004**: De regel onder de titel MOET alleen de aanwezige onderdelen tonen (eigenaar, tag, "Completed"), gescheiden door " · ", zonder scheidingsteken aan het begin, aan het eind of dubbel.
-- **FR-005**: Taken met een tag MOETEN er precies zo uitzien als nu: zelfde kader, zelfde tekst, zelfde `data-spec`-spoor naar 003 FR-003.
+- **FR-005**: Taken met een tag MOETEN er precies zo uitzien als nu: zelfde kader en zelfde tekst; het `data-spec`-spoor naar 003 FR-003 blijft behouden.
 - **FR-006**: De Open-knop MOET bij taken met en zonder tag op dezelfde horizontale positie staan.
 
 ### Key Entities

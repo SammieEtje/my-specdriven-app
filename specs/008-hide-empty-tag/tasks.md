@@ -30,7 +30,7 @@ description: "Task list for hiding the empty tag frame"
 
 ## Phase 1: Setup
 
-- [ ] T001 Record the baseline: `npm test` (expect 68 of 68) and `npm run test:e2e --workers=1` (expect 28 of 28). Create a "Results" heading in `specs/008-hide-empty-tag/quickstart.md` and write both numbers there
+- [ ] T001 Record the baseline: `npm test` (expect 68 of 68) and `npm run test:e2e -- --workers=1` (expect 28 of 28; the `--` passes the flag on to Playwright). Create a "Results" heading in `specs/008-hide-empty-tag/quickstart.md` and write both numbers there
 
 ---
 
@@ -62,6 +62,7 @@ description: "Task list for hiding the empty tag frame"
   - `'008:FR-003 adding and clearing a tag in the dialog updates the card'`: add "Tag me", open it, fill `#task-tag-field` with "Test": the card's `.tag` reads "Test"; fill it with "": `.tag` count 0;
   - `'008:FR-001 a tag of only spaces counts as empty'`: open "Tag me", fill the tag with three spaces: `.tag` count 0;
   - `'008:FR-006 Open buttons share one right edge'`: add "No tag here"; the `boundingBox()` right edges (`x + width`) of the Open buttons of all three cards are equal within 1 px;
+  - `'008:FR-002 a card without a tag passes axe'`: add "No tag here", then run axe with the WCAG 2.1 AA tags as in `e2e/a11y.spec.js` (import `AxeBuilder` from `@axe-core/playwright`) and expect no serious or critical violations (constitution IV);
   - `'008:FR-001 same in every filter and after reload'`: add "No tag here"; for `filter-all` and `filter-active` its card has no `.tag`; check it off, then `filter-completed`: still no `.tag`; reload: still no `.tag`
 
 ### Implementation for User Story 1
@@ -80,7 +81,7 @@ description: "Task list for hiding the empty tag frame"
 
 ### Tests for User Story 2 ⚠️
 
-- [ ] T006 [P] [US2] Add to `e2e/empty-tag-008.spec.js`:
+- [ ] T006 [US2] Add to `e2e/empty-tag-008.spec.js`:
   - `'008:FR-004 no separators when owner and tag are empty'`: add "Bare task"; its `.meta` text, trimmed, is `''`; check it off: `.meta` reads `Completed`;
   - `'008:FR-004 owner only'`: open "Bare task", set `#task-owner-field` to "Ava", close: `.meta` reads `Ava`;
   - `'008:FR-004 unchanged for full metadata'`: "Prepare launch recap" `.meta` reads `Ava · Marketing`; "Share spec checklist" reads `Leo · Product · Completed`;
@@ -98,7 +99,7 @@ description: "Task list for hiding the empty tag frame"
 
 - [ ] T008 Run the full gate: `npm test`, `npm run lint`, `npm run lint:security`, `npm run format:check`, `npm run test:e2e`. Walk through the 8 manual scenarios in `specs/008-hide-empty-tag/quickstart.md` (headless Chromium is fine) and record the results under "Results"
 - [ ] T009 Append `## Phase: implement` to `specs/008-hide-empty-tag/prompts.md`, commit, and tag `008-implement`
-- [ ] T010 **After confirmation**: push `008-hide-empty-tag` and its tags and open a PR to `main`. Make sure `code`, `security`, `usability` and CodeQL are green, and record the run in `quickstart.md`. If PR #13 (007) has merged by then, first update from `main` and add the 008 entry to `FEATURE_DOCS` in `docs.js` (plan, Complexity Tracking)
+- [ ] T010 **After confirmation**: push `008-hide-empty-tag` and its tags and open a PR to `main`. Make sure `code`, `security`, `usability` and CodeQL are green, and record the run in `quickstart.md`. If PR #13 (007) has merged by then, first update from `main`, add the 008 entry to `FEATURE_DOCS` in `docs.js` (plan, Complexity Tracking) and run `node --test docs.test.js`: both the manifest test and the SC-001 word-for-word test of 007 now cover the 008 documents. If the word-for-word test fails on a 008 document (for example nested backticks), simplify that document
 
 ---
 
@@ -112,7 +113,7 @@ description: "Task list for hiding the empty tag frame"
 
 ### Parallel Opportunities
 
-- T002 (`tag.test.js`) and T004 (`e2e/empty-tag-008.spec.js`) are different files and can be written together.
+- T002 (`tag.test.js`) and T004 (`e2e/empty-tag-008.spec.js`) are different files and can be written together. The other tasks share `e2e/empty-tag-008.spec.js` or `renderTaskList` and run one after the other.
 
 ## Parallel Example: start
 

@@ -22,3 +22,16 @@
 - Trigger: `/speckit-tasks`
 - Result: 10 tasks. Foundational adds `hasTag` and `metaLine` test-first; US1 has 2 tasks, US2 has 2.
 - T010 (push and PR) needs owner confirmation.
+
+## Phase: analyze
+
+- Date: 2026-10-08
+- Trigger: `/speckit-analyze`, then the owner asked to fix all findings
+- Findings: 0 CRITICAL, 0 HIGH, 2 MEDIUM and 4 LOW.
+- Remediation:
+  - I1: T001 uses `npm run test:e2e -- --workers=1`, so the flag reaches Playwright.
+  - I2: T010 also runs `docs.test.js` after a 007 merge, because the SC-001 word-for-word test then covers the 008 documents.
+  - C1: an axe check with a card without a tag, in T004.
+  - F1: `[P]` removed from T006.
+  - A1: User Story 2 is kept; the owner answered "ja, graag" to the remediation offer that asked whether US2 stays.
+  - T1: FR-005 says the trace to 003 FR-003 is kept, instead of "the same".
