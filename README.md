@@ -28,8 +28,11 @@ The app has two panels:
 
 - **The to-do board.** Add tasks, check them off, filter by All, Active or Completed, and open a task to edit its title,
   description, tag and owner. Tasks are saved in your browser, so they survive a reload. Nothing leaves your machine.
-- **The decision trace.** Click any element on the board and this panel shows the specification behind it: the feature,
-  the element, its description, and what was decided in each phase (specify, clarify, plan, tasks, implement).
+- **The Spec Kit documents.** Click any element on the board and this panel shows the real documents behind it, one tab
+  per phase: the specification, its clarifications, the plan with its research and contracts, the tasks, and the
+  analyze and implement records. The feature comes from the element's `data-spec` trace; when an element traces to more
+  than one feature, you can switch between them. Elements show only the features in their own trace, and few of them
+  carry their 001 origin yet.
 
 The interface follows the Polderworks design system and works with keyboard only.
 
@@ -67,6 +70,7 @@ English.
 | 004 Pull-request quality gate | Built                | Automated `code`, `security` and `usability` checks that every pull request must pass.              | [spec](specs/004-ci-quality-gates/spec.md)         |
 | 005 Complete the core flow    | Built                | Adding tasks, filters, the empty state and saving across reloads, as 001 had promised.              | [spec](specs/005-complete-core-flow/spec.md)       |
 | 006 README and license        | Built                | This README, the MIT license and the third-party notices.                                           | [spec](specs/006-readme-and-license/spec.md)       |
+| 007 Phase tabs                | Built                | The trace panel shows the real Spec Kit documents per phase instead of hand-written summaries.      | [spec](specs/007-spec-phase-tabs/spec.md)          |
 
 ## Lessons learned
 
@@ -133,8 +137,6 @@ Spec Kit commands, and open a pull request. It merges once all three checks are 
 
 ## Known issues
 
-- Clicking a task's checkbox shows the trace for the add-task specification instead of the one for checking off tasks.
-  The trace data lists the checkboxes under the wrong names.
 - Closing the task dialog by clicking outside it leaves keyboard focus on the closed dialog instead of the Open button.
   Closing with the Close button or Escape works correctly.
 - Feature 002, reordering tasks by priority, is specified but not built.

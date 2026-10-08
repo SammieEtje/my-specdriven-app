@@ -45,3 +45,22 @@
   - I4: SC-004 now says serious or critical violations.
   - A2: US3 scenario 1 fixes automatic activation.
   - C3: T022 checks that the page itself does not scroll.
+
+## Phase: implement
+
+- Date: 2026-10-07 and 2026-10-08
+- Trigger: `/speckit-implement`
+- Result:
+  - New `markdown.js` (subset renderer), `docs.js` (manifest, phase mapping, the one guarded `fetch`), `markup` in `html.js`.
+  - The trace panel in `index.html` and `app.js` replaced by the spec panel; `FEATURE_SPECS` and `buildTrace` removed.
+  - Tests: 83 unit (19 new, 4 removed) and 46 e2e (18 new), all green. Lint, security lint and formatting clean.
+  - README: panel description, 007 in the features table, the checkbox known issue removed.
+- Found and fixed during the build:
+  - The keyboard test identifies controls by `data-target` or `id`, so every switcher button got an id (`feature-option-NNN`, `plan-doc-N`).
+  - `.switcher { display: flex }` overrode `hidden`; added `.switcher[hidden]`.
+  - The switchers first used `.map(html...).join('')`, which `lint:security` rejected; they now compose with `markup`.
+  - The SC-001 test first stripped link targets inside code spans and list markers inside code fences; both are now left alone. A word-final backslash is ignored on both sides, because inside code spans it is literal (CommonMark).
+- Deviations from the contract:
+  - No visible "Loading" text: the previous content stays with `aria-busy="true"` until the document arrives (cached documents arrive within a frame).
+  - An element without any `data-spec` trace shows "This element has no data-spec trace to a feature." Today every element has one.
+- Known, not caused by 007: the parallel e2e cold-start flake recorded in `quickstart.md` (Results).

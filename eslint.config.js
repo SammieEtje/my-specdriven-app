@@ -16,7 +16,7 @@ export default [
     }
   },
   {
-    files: ['app.js', 'logic.js', 'html.js'],
+    files: ['app.js', 'logic.js', 'html.js', 'docs.js', 'markdown.js'],
     languageOptions: { globals: globals.browser }
   },
   {
