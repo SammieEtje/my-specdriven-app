@@ -56,3 +56,4 @@ Start the demo with `node scripts/serve.js` and open `http://localhost:8000`.
 | 10 | Pass. 375 px: tabs wrap onto two lines, horizontal overflow 0. |
 | 11 | Pass. With `**/specs/**` blocked: "This document could not be loaded. Check that the demo server is running, or read it at …"; adding a task still works. |
 | 12 | Pass. After five quick clicks the panel shows the last selection (`task-input`, feature 003). |
+- **Quality gate (T030, 2026-10-08)**: PR [#13](https://github.com/SammieEtje/my-specdriven-app/pull/13), run [37762248385](https://github.com/SammieEtje/my-specdriven-app/actions/runs/37762248385): `code` (12 s), `security` (57 s), `usability` (38 s) and CodeQL all pass.

@@ -164,7 +164,7 @@ description: "Task list for the phase tabs with the real Spec Kit documents"
 - [X] T027 [P] In `README.md`, rewrite the "The decision trace" bullet under "What you can see" to describe the phase tabs and the real documents, and remove the known issue about the task checkbox trace. Add the note from plan Complexity Tracking: elements show only the features in their own `data-spec` tokens. Run `node --test readme.test.js`
 - [X] T028 Run the full gate locally: `npm test`, `npm run lint`, `npm run lint:security`, `npm run format:check`, `npm run test:e2e`. Then walk through the 12 manual scenarios in `specs/007-spec-phase-tabs/quickstart.md` (headless Chromium is fine; scenario 11 with request blocking for `*/specs/*`) and record the results under "Results", next to the T001 baseline
 - [X] T029 Append `## Phase: implement` to `specs/007-spec-phase-tabs/prompts.md`, commit, and tag `007-implement`
-- [ ] T030 **After confirmation**: push `007-spec-phase-tabs` and its tags and open a PR to `main`. Make sure `code`, `security`, `usability` and CodeQL are green, and record the run URL in `quickstart.md`
+- [X] T030 **After confirmation**: push `007-spec-phase-tabs` and its tags and open a PR to `main`. Make sure `code`, `security`, `usability` and CodeQL are green, and record the run URL in `quickstart.md`
 
 ---
 
