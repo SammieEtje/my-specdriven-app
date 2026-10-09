@@ -46,3 +46,9 @@
 - Found and fixed during the build (tests only):
   - Checking off a task under the Active filter removes it from the list, so the filter test now checks it off under All.
   - `toHaveCount(0)` on `.tag` also passes when the card is missing, so the test first asserts the card is visible.
+
+## Update after 007 merged
+
+- Date: 2026-10-09
+- Trigger: GitHub reported PR #14 out of date after PR #13 merged.
+- Done: merged `main` into `008-hide-empty-tag` (no conflicts) and added the 008 entry to `FEATURE_DOCS` in `docs.js`, as T010 and the plan prescribed. All checks green locally.

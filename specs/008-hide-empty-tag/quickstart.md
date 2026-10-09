@@ -43,3 +43,4 @@ Start with `npm start` and open `http://localhost:8000`. Clear the saved state f
 | 7 | Pass. After reload: still no frame, "Ava · Completed". |
 | 8 | Pass. All: frames on the two example tasks only; Active and Completed the same. |
 - **Quality gate (T010, 2026-10-09)**: PR [#14](https://github.com/SammieEtje/my-specdriven-app/pull/14), run [37933414542](https://github.com/SammieEtje/my-specdriven-app/actions/runs/37933414542): `code`, `security`, `usability` and CodeQL all pass. PR #13 (007) was still open, so no `docs.js` entry was needed.
+- **After PR #13 merged (2026-10-09)**: `main` merged into this branch without conflicts; 008 added to `FEATURE_DOCS` in `docs.js`. `npm test` 87 of 87, including 007's manifest and SC-001 word-for-word tests over the 008 documents. Lint, security lint and formatting clean. `npm run test:e2e` 58 of 58 (47 from 007, 11 from 008), twice in parallel.
