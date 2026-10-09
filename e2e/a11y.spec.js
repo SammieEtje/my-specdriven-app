@@ -33,3 +33,15 @@ test('004:FR-009 after filtering there are no serious/critical WCAG 2.1 AA viola
   await page.click('[data-target="filter-active"]');
   expect(await seriousViolations(page)).toEqual([]);
 });
+
+// T023 (007) Every phase tab, for two features (SC-004)
+test('007:SC-004 every phase tab has no serious/critical WCAG 2.1 AA violations', async ({ page }) => {
+  for (const feature of ['003', '005']) {
+    await page.click(`#feature-option-${feature}`);
+    for (const phase of ['specify', 'clarify', 'plan', 'tasks', 'analyze', 'implement']) {
+      await page.click(`#tab-${phase}`);
+      await expect(page.locator('#phase-panel')).not.toHaveAttribute('aria-busy', 'true');
+      expect(await seriousViolations(page), `${feature} ${phase}`).toEqual([]);
+    }
+  }
+});

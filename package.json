@@ -6,7 +6,7 @@
   "scripts": {
     "test": "node --test",
     "lint": "node scripts/lint.js",
-    "lint:security": "eslint --config eslint.security.config.js app.js logic.js html.js",
+    "lint:security": "eslint --config eslint.security.config.js app.js logic.js html.js docs.js markdown.js",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "test:e2e": "playwright test",

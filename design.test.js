@@ -370,30 +370,28 @@ test('FR-007 and FR-008 focus and dialog', () => {
   assert.ok(tokens.includes('001:FR-004') && tokens.includes('003:FR-008'));
 });
 
-// T034
+// T034, rewritten by T012 (007): the code block style now applies to code in the rendered documents
 test('FR-009 code block and callout', () => {
   const css = readFile('./styles.css');
   const html = readFile('./index.html');
+  const app = readFile('./app.js');
 
-  assert.equal(cssValue(css, '.trace-object', 'font-family'), 'var(--font-mono)');
-  assert.equal(cssValue(css, '.trace-object', 'background'), 'var(--surface-sunken)');
+  assert.equal(cssValue(css, '.md-body pre', 'font-family'), 'var(--font-mono)');
+  assert.equal(cssValue(css, '.md-body pre', 'background'), 'var(--surface-sunken)');
   assert.match(
-    cssValue(css, '.trace-object', 'border') ?? '',
+    cssValue(css, '.md-body pre', 'border') ?? '',
     /var\(--border-width-hairline\) solid var\(--border-default\)/
   );
-  assert.ok(['0', 'var(--radius-none)'].includes(cssValue(css, '.trace-object', 'border-radius')));
-  assert.equal(cssValue(css, '.trace-object', 'overflow-x'), 'auto');
-
-  assert.match(
-    cssValue(css, '.phase-item', 'border-bottom') ?? '',
-    /var\(--border-width-hairline\) solid var\(--border-default\)/
-  );
-  assert.ok([undefined, 'none', 'transparent'].includes(cssValue(css, '.phase-item', 'background')));
+  assert.ok(['0', 'var(--radius-none)'].includes(cssValue(css, '.md-body pre', 'border-radius')));
+  assert.equal(cssValue(css, '.md-body pre', 'white-space'), 'pre-wrap');
 
   assert.match(cssValue(css, '.callout', 'border-left') ?? '', /^var\(--border-width-accent\) solid /);
   assert.ok([undefined, 'var(--surface-card)'].includes(cssValue(css, '.callout', 'background')));
 
-  for (const id of ['trace-object', 'phase-list']) {
-    assert.ok(dataSpecTokens(elementTag(html, 'id', id)).includes('003:FR-009'), `#${id} lacks 003:FR-009`);
-  }
+  assert.match(app, /class="callout doc-notice" data-spec="007:FR-009 003:FR-009"/);
+  assert.match(app, /class="md-body" data-spec="003:FR-009"/);
+  assert.ok(
+    dataSpecTokens(elementTag(html, 'id', 'phase-panel')).includes('004:FR-009'),
+    '#phase-panel lacks 004:FR-009'
+  );
 });

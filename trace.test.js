@@ -64,3 +64,13 @@ test('004:FR-004 self-check: a token for a feature without a spec is reported', 
   assert.equal(knownIds('999'), null);
   assert.equal(unknownTokens(tokens).length, 1);
 });
+
+// 007 The spec panel reads the trace of the selected element, so every selectable element needs one (007:FR-002)
+test('007:FR-002 every feature-target in index.html carries a data-spec trace', () => {
+  const html = readFileSync(new URL('./index.html', import.meta.url), 'utf8');
+  const missing = [...html.matchAll(/<[a-z]+[^>]*\bfeature-target\b[^>]*>/gs)]
+    .map(([tag]) => tag)
+    .filter((tag) => !/data-spec="[^"]+"/.test(tag))
+    .map((tag) => tag.match(/data-target="([^"]+)"/)?.[1] ?? tag.slice(0, 40));
+  assert.deepEqual(missing, []);
+});

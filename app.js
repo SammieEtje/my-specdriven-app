@@ -1,6 +1,4 @@
 import {
-  FEATURE_SPECS,
-  buildTrace,
   updateTask,
   createTask,
   filterTasks,
@@ -9,14 +7,16 @@ import {
   serializeState,
   parseState
 } from './logic.js';
-import { html } from './html.js';
+import { html, markup } from './html.js';
+import { findFeature, featuresFor, phaseDocuments, loadDocument } from './docs.js';
+import { renderMarkdown, extractSection } from './markdown.js';
 
-const titleEl = document.getElementById('trace-title');
-const featureIdEl = document.getElementById('trace-feature-id');
-const elementEl = document.getElementById('trace-element');
-const descriptionEl = document.getElementById('trace-description');
-const traceObjectEl = document.getElementById('trace-object');
-const phaseListEl = document.getElementById('phase-list');
+// T014 (007) The hand-written trace elements are gone; the spec panel replaces them (contracts/ui-panel.md)
+const selectionEl = document.getElementById('spec-selection');
+const featureSwitcherEl = document.getElementById('feature-switcher');
+const phaseTabsEl = document.getElementById('phase-tabs');
+const docSwitcherEl = document.getElementById('doc-switcher');
+const phasePanelEl = document.getElementById('phase-panel');
 const taskListEl = document.getElementById('task-list');
 const taskTitleField = document.getElementById('task-title-field');
 const taskDescriptionField = document.getElementById('task-description-field');
@@ -81,48 +81,174 @@ function refresh() {
   writeStorage(serializeState(taskState));
 }
 
-function renderPhaseList(trace) {
-  phaseListEl.innerHTML = '';
-
-  trace.phases.forEach((phase) => {
-    // T038 The implement phase produced the on-screen element, so it gets the Callout left rule
-    const item = document.createElement('li');
-    item.className = phase.phase === 'implement' ? 'phase-item callout' : 'phase-item';
-    // T017 Escape trace text before it becomes markup (004:FR-007)
-    item.innerHTML = html`
-      <strong class="phase-name">${phase.phase}</strong>
-      <div class="phase-decision">${phase.decision}</div>
-    `;
-    phaseListEl.appendChild(item);
-  });
-}
+// T015 (007) Panel state (data-model PanelState). The phase survives a new selection (FR-008).
+const panel = {
+  selectedTarget: null,
+  traceKey: null,
+  features: [],
+  featureId: null,
+  phase: 'specify',
+  docIndex: 0,
+  requestId: 0
+};
 
 function renderTrace(target) {
-  const selectedSpec = FEATURE_SPECS.find((spec) => spec.elementIds.includes(target)) ?? FEATURE_SPECS[0];
-  const trace = buildTrace(target, selectedSpec);
-
-  const traceData = {
-    selectedElement: trace.selectedElement,
-    featureId: trace.featureId,
-    title: trace.title,
-    description: trace.description,
-    source: trace.source,
-    phases: trace.phases
-  };
-
-  titleEl.textContent = trace.title;
-  featureIdEl.textContent = trace.featureId;
-  elementEl.textContent = trace.selectedElement;
-  descriptionEl.textContent = trace.description;
-  traceObjectEl.textContent = JSON.stringify(traceData, null, 2);
-  renderPhaseList(trace);
-
   document.querySelectorAll('.feature-target').forEach((element) => {
     const isSelected = element.dataset.target === target;
     // T007 The traced outline comes from .feature-target.active in styles.css (R5)
     element.classList.toggle('active', isSelected);
   });
+
+  // T015 (007) The features come from the data-spec trace of the element, or its closest traced ancestor (research R5)
+  const element = [...document.querySelectorAll('.feature-target')].find((item) => item.dataset.target === target);
+  const features = featuresFor(element?.closest('[data-spec]')?.dataset.spec);
+  const traceKey = `${target}|${features.join(' ')}`;
+  // Typing in a field selects the same element on every key; keep the panel and its scroll position then
+  if (traceKey === panel.traceKey) return;
+
+  panel.selectedTarget = target;
+  panel.traceKey = traceKey;
+  panel.features = features;
+  panel.featureId = features[0] ?? null;
+  panel.docIndex = 0;
+  renderSelection();
+  renderFeatureSwitcher();
+  loadPanel();
 }
+
+function renderSelection() {
+  const entry = findFeature(panel.featureId);
+  const feature = panel.featureId ?? 'none';
+  const title = entry ? entry.title : 'Unknown feature';
+  selectionEl.innerHTML = html`Element <code>${panel.selectedTarget}</code> · Feature <code>${feature}</code> ${title}`;
+}
+
+// T021 (007) One button per linked feature, only when there is a choice (FR-007)
+function renderFeatureSwitcher() {
+  featureSwitcherEl.hidden = panel.features.length < 2;
+  // markup`` joins the escaped buttons without turning them into an unchecked string (lint:security)
+  featureSwitcherEl.innerHTML = markup`${panel.features.map(
+    (id) =>
+      markup`<button type="button" id="feature-option-${id}" class="filter-btn" data-feature="${id}" title="${findFeature(id)?.title ?? 'Unknown feature'}" aria-pressed="${String(id === panel.featureId)}">${id}</button>`
+  )}`;
+}
+
+featureSwitcherEl.addEventListener('click', (event) => {
+  const button = event.target.closest('button[data-feature]');
+  if (!button) return;
+  panel.featureId = button.dataset.feature;
+  panel.docIndex = 0;
+  renderSelection();
+  renderFeatureSwitcher();
+  loadPanel();
+});
+
+// T015 (007) Select a tab: aria-selected, roving tabindex and the panel's label (research R6)
+function selectPhase(phase, { focus = false } = {}) {
+  phaseTabsEl.querySelectorAll('[role="tab"]').forEach((tab) => {
+    const isActive = tab.id === `tab-${phase}`;
+    tab.setAttribute('aria-selected', String(isActive));
+    tab.tabIndex = isActive ? 0 : -1;
+    if (isActive && focus) tab.focus();
+  });
+  phasePanelEl.setAttribute('aria-labelledby', `tab-${phase}`);
+  panel.phase = phase;
+  panel.docIndex = 0;
+  loadPanel();
+}
+
+// T017 (007) In the plan tab, a button per supporting document (FR-004)
+function renderDocSwitcher(entry) {
+  const refs = entry && panel.phase === 'plan' ? phaseDocuments(entry, 'plan') : [];
+  docSwitcherEl.hidden = refs.length < 2;
+  docSwitcherEl.innerHTML = markup`${(refs.length < 2 ? [] : refs).map(
+    (ref, index) =>
+      markup`<button type="button" id="plan-doc-${index}" class="filter-btn" data-doc-index="${index}" aria-pressed="${String(index === panel.docIndex)}">${ref.label}</button>`
+  )}`;
+}
+
+function showNotice(lines) {
+  phasePanelEl.removeAttribute('aria-busy');
+  phasePanelEl.innerHTML = html`<div class="callout doc-notice" data-spec="007:FR-009 003:FR-009">${lines.join(' ')}</div>`;
+  phasePanelEl.scrollTop = 0;
+}
+
+// T016 (007) Load and show the document for the current feature, phase and plan choice (data-model LoadResult)
+async function loadPanel() {
+  const requestId = ++panel.requestId;
+  const entry = findFeature(panel.featureId);
+  renderDocSwitcher(entry);
+
+  if (!entry) {
+    showNotice([
+      panel.featureId
+        ? `There is no folder for feature ${panel.featureId} in specs/.`
+        : 'This element has no data-spec trace to a feature.'
+    ]);
+    return;
+  }
+
+  const refs = phaseDocuments(entry, panel.phase);
+  const ref = refs[panel.docIndex] ?? refs[0];
+  const path = `specs/${entry.dir}/${ref.file}`;
+  const notProduced = [
+    `The ${panel.phase} phase has not been run for feature ${entry.id} yet.`,
+    `Expected at ${path}.`
+  ];
+  if (!entry.files.includes(ref.file)) {
+    showNotice(notProduced);
+    return;
+  }
+
+  phasePanelEl.setAttribute('aria-busy', 'true');
+  const result = await loadDocument(entry.dir, ref.file);
+  // R8 A newer selection or tab wins; drop this late answer
+  if (requestId !== panel.requestId) return;
+
+  if (result.state === 'unavailable') {
+    showNotice(['This document could not be loaded.', `Check that the demo server is running, or read it at ${path}.`]);
+    return;
+  }
+  const text = result.state === 'ok' && ref.section ? extractSection(result.text, ref.section) : result.text;
+  if (result.state !== 'ok' || text === null) {
+    showNotice(notProduced);
+    return;
+  }
+
+  phasePanelEl.removeAttribute('aria-busy');
+  const label = ref.section ? `${path} · section ${ref.section}` : path;
+  phasePanelEl.innerHTML = html`<p class="doc-source">${label}</p><div class="md-body" data-spec="003:FR-009"></div>`;
+  phasePanelEl.querySelector('.md-body').innerHTML = renderMarkdown(text, { baseDir: `specs/${entry.dir}/` });
+  phasePanelEl.scrollTop = 0;
+}
+
+phaseTabsEl.addEventListener('click', (event) => {
+  const tab = event.target.closest('[role="tab"]');
+  if (tab) selectPhase(tab.id.replace('tab-', ''));
+});
+
+// T025 (007) Arrow keys (wrapping), Home and End select and focus a tab: automatic activation (research R6)
+phaseTabsEl.addEventListener('keydown', (event) => {
+  const tabs = [...phaseTabsEl.querySelectorAll('[role="tab"]')];
+  const current = tabs.indexOf(event.target.closest('[role="tab"]'));
+  if (current === -1) return;
+  const targets = {
+    ArrowRight: (current + 1) % tabs.length,
+    ArrowLeft: (current - 1 + tabs.length) % tabs.length,
+    Home: 0,
+    End: tabs.length - 1
+  };
+  if (!(event.key in targets)) return;
+  event.preventDefault();
+  selectPhase(tabs[targets[event.key]].id.replace('tab-', ''), { focus: true });
+});
+
+docSwitcherEl.addEventListener('click', (event) => {
+  const button = event.target.closest('button[data-doc-index]');
+  if (!button) return;
+  panel.docIndex = Number(button.dataset.docIndex);
+  loadPanel();
+});
 
 function getSelectedTask() {
   return taskState.find((task) => task.id === selectedTaskId) ?? taskState[0];

@@ -79,7 +79,13 @@
         </nav>
 
         <section class="task-list-container">
-          <ul id="task-list" class="task-list feature-target" data-target="task-list"></ul>
+          <!-- 007 Every selectable element needs a trace, or the spec panel has nothing to show -->
+          <ul
+            id="task-list"
+            class="task-list feature-target"
+            data-target="task-list"
+            data-spec="001:FR-001 003:FR-003"
+          ></ul>
 
           <!-- T019 -->
           <div
@@ -116,38 +122,109 @@
       </main>
 
       <aside class="inspector-panel">
-        <section class="trace-panel">
-          <p class="eyebrow">Decision trace</p>
-          <h2 id="trace-title">Add task CTA</h2>
+        <!-- T013 (007) The real Spec Kit documents per phase replace the hand-written trace (contracts/ui-panel.md) -->
+        <section class="spec-panel" aria-labelledby="spec-panel-title">
+          <p class="eyebrow">Spec Kit documents</p>
+          <h2 id="spec-panel-title">Specification</h2>
 
-          <!-- T035 -->
-          <div class="trace-summary" data-spec="003:FR-002">
-            <div>
-              <span class="label">Feature</span>
-              <strong id="trace-feature-id">spec-01</strong>
-            </div>
-            <div>
-              <span class="label">Element</span>
-              <strong id="trace-element">add-task-button</strong>
-            </div>
+          <p id="spec-selection" class="spec-selection" data-spec="007:FR-012 003:FR-002"></p>
+
+          <div
+            id="feature-switcher"
+            class="switcher"
+            role="group"
+            aria-label="Linked features"
+            data-spec="007:FR-007"
+            hidden
+          ></div>
+
+          <div
+            id="phase-tabs"
+            class="phase-tabs"
+            role="tablist"
+            aria-label="Workflow phases"
+            data-spec="007:FR-001 001:FR-007"
+          >
+            <button
+              id="tab-specify"
+              type="button"
+              role="tab"
+              aria-selected="true"
+              aria-controls="phase-panel"
+              tabindex="0"
+            >
+              specify
+            </button>
+            <button
+              id="tab-clarify"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="phase-panel"
+              tabindex="-1"
+            >
+              clarify
+            </button>
+            <button
+              id="tab-plan"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="phase-panel"
+              tabindex="-1"
+            >
+              plan
+            </button>
+            <button
+              id="tab-tasks"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="phase-panel"
+              tabindex="-1"
+            >
+              tasks
+            </button>
+            <button
+              id="tab-analyze"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="phase-panel"
+              tabindex="-1"
+            >
+              analyze
+            </button>
+            <button
+              id="tab-implement"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="phase-panel"
+              tabindex="-1"
+            >
+              implement
+            </button>
           </div>
 
-          <p id="trace-description" class="trace-description"></p>
+          <div
+            id="doc-switcher"
+            class="switcher"
+            role="group"
+            aria-label="Plan documents"
+            data-spec="007:FR-004"
+            hidden
+          ></div>
 
-          <!-- T036 -->
-          <!-- T026 Scrollable region must be keyboard-focusable (axe scrollable-region-focusable, WCAG 2.1.1) -->
-          <!-- 005 T001 role="region" makes the aria-label valid (axe aria-prohibited-attr) -->
-          <pre
-            id="trace-object"
-            class="trace-object"
-            data-spec="003:FR-009 004:FR-009"
+          <!-- One focusable scroll region for the document (research R7, axe scrollable-region-focusable) -->
+          <div
+            id="phase-panel"
+            class="phase-panel"
+            role="tabpanel"
             tabindex="0"
-            role="region"
-            aria-label="Trace object"
-          ></pre>
-
-          <!-- T037 -->
-          <ol id="phase-list" class="phase-list" data-spec="003:FR-009" aria-live="polite"></ol>
+            aria-labelledby="tab-specify"
+            data-spec="007:FR-003 007:FR-005 007:FR-006 007:FR-010 004:FR-009"
+          ></div>
         </section>
       </aside>
     </div>
