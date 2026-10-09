@@ -155,3 +155,14 @@ test('007:FR-011 narrow screen has no horizontal page scroll', async ({ page }) 
   );
   expect(overflow).toBeLessThanOrEqual(0);
 });
+
+// 007 Clicking a card outside its controls selects the task list, which traces to 001 and 003
+test('007:FR-002 the task list shows its feature', async ({ page }) => {
+  // The title sits inside the checkbox label, so click the card's padding instead
+  await page
+    .locator('.task-card')
+    .first()
+    .click({ position: { x: 4, y: 4 } });
+  await expect(page.locator('#spec-selection')).toContainText('task-list');
+  await expect(page.locator(source)).toHaveText('specs/001-spec-driven-todo-demo/spec.md');
+});

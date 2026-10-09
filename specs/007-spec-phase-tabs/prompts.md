@@ -64,3 +64,10 @@
   - No visible "Loading" text: the previous content stays with `aria-busy="true"` until the document arrives (cached documents arrive within a frame).
   - An element without any `data-spec` trace shows "This element has no data-spec trace to a feature." Today every element has one.
 - Known, not caused by 007: the parallel e2e cold-start flake recorded in `quickstart.md` (Results).
+
+## Fix after review: task list without a trace
+
+- Date: 2026-10-08
+- Trigger: the owner's screenshot showed "This element has no data-spec trace to a feature." after clicking a task card.
+- Cause: clicking a card outside its controls selects `#task-list`, which had no `data-spec`.
+- Fix: `#task-list` carries `001:FR-001 003:FR-003`. `trace.test.js` now fails when any `.feature-target` in `index.html` lacks a trace, and `e2e/spec-tabs.spec.js` checks the task list shows feature 001.
