@@ -29,7 +29,7 @@ Start with `npm start` and open `http://localhost:8000`. Clear the saved state f
 
 - **Baseline (T001, 2026-10-09)**: `npm test` 68 of 68; `npm run test:e2e -- --workers=1` 28 of 28.
 - **Automated (T008, 2026-10-09)**: `npm test` 71 of 71 (3 new in `tag.test.js`); `npm run lint`, `npm run lint:security` and `npm run format:check` clean; `npm run test:e2e -- --workers=1` 39 of 39 (11 new in `e2e/empty-tag-008.spec.js`).
-- **Parallel e2e locally**: unreliable while the owner's own `npm start` (Python `http.server`) holds port 8000, because Playwright reuses that server and it stalls under parallel load (the reason 005 added `scripts/serve.js`). CI starts its own server.
+- **Parallel e2e locally**: unreliable while the owner's own `npm start` (Python `http.server`) holds port 8000, because Playwright reuses that server and it stalls under parallel load (the reason 005 added `scripts/serve.js`). CI starts its own server. Confirmed on 2026-10-09: with port 8000 free, three parallel runs in a row passed 39 of 39 (about 3 s each).
 - **Manual scenarios (headless Chromium, 1280 × 900, fresh storage)**:
 
 | # | Result |
