@@ -24,3 +24,21 @@ Start with `npm start` and open `http://localhost:8000`. Clear the saved state f
 | 6 | Set owner "Ava", close, check off the task. | Line reads "Ava · Completed". | US2-2, US2-3 |
 | 7 | Reload. | Same result: no frame on the task without tag. | Edge case "Bewaarde taken" |
 | 8 | Switch through All, Active and Completed. | Same behaviour in every filter. | Edge case "Filters" |
+
+## Results
+
+- **Baseline (T001, 2026-10-09)**: `npm test` 68 of 68; `npm run test:e2e -- --workers=1` 28 of 28.
+- **Automated (T008, 2026-10-09)**: `npm test` 71 of 71 (3 new in `tag.test.js`); `npm run lint`, `npm run lint:security` and `npm run format:check` clean; `npm run test:e2e -- --workers=1` 39 of 39 (11 new in `e2e/empty-tag-008.spec.js`).
+- **Parallel e2e locally**: unreliable while the owner's own `npm start` (Python `http.server`) holds port 8000, because Playwright reuses that server and it stalls under parallel load (the reason 005 added `scripts/serve.js`). CI starts its own server.
+- **Manual scenarios (headless Chromium, 1280 × 900, fresh storage)**:
+
+| # | Result |
+|---|--------|
+| 1 | Pass. New task: no tag frame, empty line under the title; Open right edges 698, 698, 698 px. |
+| 2 | Pass. "Marketing" frame; "Ava · Marketing". |
+| 3 | Pass. Typing "Test" shows the frame "Test" and the line "Test" at once. |
+| 4 | Pass. Clearing the tag removes the frame. |
+| 5 | Pass. Three spaces: no frame, empty line. |
+| 6 | Pass. Owner "Ava" and checked off: "Ava · Completed". |
+| 7 | Pass. After reload: still no frame, "Ava · Completed". |
+| 8 | Pass. All: frames on the two example tasks only; Active and Completed the same. |

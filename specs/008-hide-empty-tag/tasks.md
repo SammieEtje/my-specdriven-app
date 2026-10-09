@@ -30,7 +30,7 @@ description: "Task list for hiding the empty tag frame"
 
 ## Phase 1: Setup
 
-- [ ] T001 Record the baseline: `npm test` (expect 68 of 68) and `npm run test:e2e -- --workers=1` (expect 28 of 28; the `--` passes the flag on to Playwright). Create a "Results" heading in `specs/008-hide-empty-tag/quickstart.md` and write both numbers there
+- [X] T001 Record the baseline: `npm test` (expect 68 of 68) and `npm run test:e2e -- --workers=1` (expect 28 of 28; the `--` passes the flag on to Playwright). Create a "Results" heading in `specs/008-hide-empty-tag/quickstart.md` and write both numbers there
 
 ---
 
@@ -38,11 +38,11 @@ description: "Task list for hiding the empty tag frame"
 
 **⚠️ CRITICAL**: US1 needs `hasTag`, US2 needs `metaLine`.
 
-- [ ] T002 [P] Create `tag.test.js` (node:test) for `hasTag(task)` and `metaLine(task)` from `logic.js`, per `data-model.md`:
+- [X] T002 [P] Create `tag.test.js` (node:test) for `hasTag(task)` and `metaLine(task)` from `logic.js`, per `data-model.md`:
   - `'008:FR-001 hasTag'`: `true` for `'Marketing'` and `' Marketing '`; `false` for `''`, `'   '`, `undefined` and `null` ("`true` when `task.tag` is a string that is not empty after `trim()`");
   - `'008:FR-004 metaLine'`: every row of the `metaLine` examples table in `data-model.md`, for example owner `Ava`, tag `''`, not completed gives `Ava`; owner `''`, tag `''`, completed gives `Completed`; owner `'  '`, tag `'  '` gives `''`;
   - `'008:SC-003 metaLine never has a stray separator'`: for all 8 combinations of owner (`''` or `Ava`), tag (`''` or `Tag`) and completed, the result does not start or end with `·` and does not contain `·  ·` or `· ·`
-- [ ] T003 Add `hasTag(task)` and `metaLine(task)` to `logic.js`, with a `// T003 (008)` comment, exactly per `data-model.md`: `metaLine` returns "The trimmed owner, the trimmed tag and `Completed` (only when `task.completed`), leaving out empty parts, joined with ` · `". Make T002 pass
+- [X] T003 Add `hasTag(task)` and `metaLine(task)` to `logic.js`, with a `// T003 (008)` comment, exactly per `data-model.md`: `metaLine` returns "The trimmed owner, the trimmed tag and `Completed` (only when `task.completed`), leaving out empty parts, joined with ` · `". Make T002 pass
 
 **Checkpoint**: `npm test` passes; nothing visible changed yet.
 
@@ -56,7 +56,7 @@ description: "Task list for hiding the empty tag frame"
 
 ### Tests for User Story 1 ⚠️
 
-- [ ] T004 [P] [US1] Create `e2e/empty-tag-008.spec.js` (import `{ test, expect, gotoApp }` from `./fixtures.js`, `beforeEach` calls `gotoApp(page)`; every test gets a fresh context, so the two example tasks are there). Helper: `card(page, title)` returns `page.locator('.task-card', { hasText: title })`. Tests:
+- [X] T004 [P] [US1] Create `e2e/empty-tag-008.spec.js` (import `{ test, expect, gotoApp }` from `./fixtures.js`, `beforeEach` calls `gotoApp(page)`; every test gets a fresh context, so the two example tasks are there). Helper: `card(page, title)` returns `page.locator('.task-card', { hasText: title })`. Tests:
   - `'008:FR-001 FR-002 a task without a tag has no tag frame'`: add "No tag here"; its card has `.tag` count 0;
   - `'008:FR-005 tagged tasks keep their frame'`: "Prepare launch recap" has one `.tag` with text "Marketing" and `data-spec` containing `003:FR-003`;
   - `'008:FR-003 adding and clearing a tag in the dialog updates the card'`: add "Tag me", open it, fill `#task-tag-field` with "Test": the card's `.tag` reads "Test"; fill it with "": `.tag` count 0;
@@ -67,7 +67,7 @@ description: "Task list for hiding the empty tag frame"
 
 ### Implementation for User Story 1
 
-- [ ] T005 [US1] In `renderTaskList` in `app.js`, remove the `<span class="tag" ...>` from the card template. After inserting the card, when `hasTag(task)` (import from `logic.js`), insert the tag into that card's `.task-meta-actions` with `insertAdjacentHTML('afterbegin', html`<span class="tag" data-spec="003:FR-003 008:FR-001">${task.tag}</span>`)` (research R1). Leave the checkbox line (its 003 test matches it literally) and the Open button unchanged. Make T004 pass and run `npm run lint:security`
+- [X] T005 [US1] In `renderTaskList` in `app.js`, remove the `<span class="tag" ...>` from the card template. After inserting the card, when `hasTag(task)` (import from `logic.js`), insert the tag into that card's `.task-meta-actions` with `insertAdjacentHTML('afterbegin', html`<span class="tag" data-spec="003:FR-003 008:FR-001">${task.tag}</span>`)` (research R1). Leave the checkbox line (its 003 test matches it literally) and the Open button unchanged. Make T004 pass and run `npm run lint:security`
 
 **Checkpoint**: US1 works on its own; quickstart scenarios 1 to 5, 7 and 8 (tag frame parts).
 
@@ -81,7 +81,7 @@ description: "Task list for hiding the empty tag frame"
 
 ### Tests for User Story 2 ⚠️
 
-- [ ] T006 [US2] Add to `e2e/empty-tag-008.spec.js`:
+- [X] T006 [US2] Add to `e2e/empty-tag-008.spec.js`:
   - `'008:FR-004 no separators when owner and tag are empty'`: add "Bare task"; its `.meta` text, trimmed, is `''`; check it off: `.meta` reads `Completed`;
   - `'008:FR-004 owner only'`: open "Bare task", set `#task-owner-field` to "Ava", close: `.meta` reads `Ava`;
   - `'008:FR-004 unchanged for full metadata'`: "Prepare launch recap" `.meta` reads `Ava · Marketing`; "Share spec checklist" reads `Leo · Product · Completed`;
@@ -89,7 +89,7 @@ description: "Task list for hiding the empty tag frame"
 
 ### Implementation for User Story 2
 
-- [ ] T007 [US2] In `renderTaskList` in `app.js`, replace the meta text `${task.owner} · ${task.tag}${task.completed ? ' · Completed' : ''}` with `${metaLine(task)}` and add `data-spec="008:FR-004"` to that `span.meta`. Make T006 pass
+- [X] T007 [US2] In `renderTaskList` in `app.js`, replace the meta text `${task.owner} · ${task.tag}${task.completed ? ' · Completed' : ''}` with `${metaLine(task)}` and add `data-spec="008:FR-004"` to that `span.meta`. Make T006 pass
 
 **Checkpoint**: US1 and US2 work; all quickstart scenarios.
 
@@ -97,8 +97,8 @@ description: "Task list for hiding the empty tag frame"
 
 ## Phase 5: Polish & Cross-Cutting Concerns
 
-- [ ] T008 Run the full gate: `npm test`, `npm run lint`, `npm run lint:security`, `npm run format:check`, `npm run test:e2e`. Walk through the 8 manual scenarios in `specs/008-hide-empty-tag/quickstart.md` (headless Chromium is fine) and record the results under "Results"
-- [ ] T009 Append `## Phase: implement` to `specs/008-hide-empty-tag/prompts.md`, commit, and tag `008-implement`
+- [X] T008 Run the full gate: `npm test`, `npm run lint`, `npm run lint:security`, `npm run format:check`, `npm run test:e2e`. Walk through the 8 manual scenarios in `specs/008-hide-empty-tag/quickstart.md` (headless Chromium is fine) and record the results under "Results"
+- [X] T009 Append `## Phase: implement` to `specs/008-hide-empty-tag/prompts.md`, commit, and tag `008-implement`
 - [ ] T010 **After confirmation**: push `008-hide-empty-tag` and its tags and open a PR to `main`. Make sure `code`, `security`, `usability` and CodeQL are green, and record the run in `quickstart.md`. If PR #13 (007) has merged by then, first update from `main`, add the 008 entry to `FEATURE_DOCS` in `docs.js` (plan, Complexity Tracking) and run `node --test docs.test.js`: both the manifest test and the SC-001 word-for-word test of 007 now cover the 008 documents. If the word-for-word test fails on a 008 document (for example nested backticks), simplify that document
 
 ---

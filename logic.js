@@ -255,3 +255,14 @@ export function parseState(raw, fallbackTasks) {
     };
   });
 }
+
+// T003 (008) A tag only counts when it has text after trimming (FR-001)
+export function hasTag(task) {
+  return typeof task?.tag === 'string' && task.tag.trim() !== '';
+}
+
+// T003 (008) The line under the title: only the parts that exist, joined by " · " (FR-004)
+export function metaLine(task) {
+  const text = (value) => (typeof value === 'string' ? value.trim() : '');
+  return [text(task.owner), text(task.tag), task.completed ? 'Completed' : ''].filter(Boolean).join(' · ');
+}

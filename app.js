@@ -7,7 +7,9 @@ import {
   emptyStateText,
   STORAGE_KEY,
   serializeState,
-  parseState
+  parseState,
+  hasTag,
+  metaLine
 } from './logic.js';
 import { html } from './html.js';
 
@@ -151,6 +153,7 @@ function renderTaskList() {
   // T045 Task checkbox carries its 003:FR-006 trace token
   // T018 Completed class and status text, Tag pattern for the task tag
   // T017 Task fields are user-editable, so every row is escaped with html`` (004:FR-007, XSS fix)
+  // T007 (008) The meta line comes from metaLine(), so empty parts leave no stray separators
   taskListEl.innerHTML = '';
   // T015 (005) Render only the tasks in the current filter
   filterTasks(taskState, currentFilter).forEach((task) => {
@@ -163,16 +166,21 @@ function renderTaskList() {
             <input class="feature-target" data-target="task-toggle-${task.id}" data-spec="003:FR-006" type="checkbox" ${task.completed ? 'checked' : ''} />
             <span class="task-content">
               <span class="task-title">${task.title}</span>
-              <span class="meta">${task.owner} · ${task.tag}${task.completed ? ' · Completed' : ''}</span>
+              <span class="meta" data-spec="008:FR-004">${metaLine(task)}</span>
             </span>
           </label>
           <div class="task-meta-actions">
-            <span class="tag" data-spec="003:FR-003">${task.tag}</span>
             <button class="task-open-button feature-target btn btn-secondary ${isSelected ? 'selected' : ''}" data-target="task-open" data-task-id="${task.id}" data-spec="003:FR-005">Open</button>
           </div>
         </li>
       `
     );
+    // T005 (008) Only a tag with text gets its frame; the lint rejects conditional fragments, so it is a second insert
+    if (hasTag(task)) {
+      taskListEl.lastElementChild
+        .querySelector('.task-meta-actions')
+        .insertAdjacentHTML('afterbegin', html`<span class="tag" data-spec="003:FR-003 008:FR-001">${task.tag}</span>`);
+    }
   });
 
   // T020 (005) Show the empty state instead of an empty list, with text for the current filter (FR-007)

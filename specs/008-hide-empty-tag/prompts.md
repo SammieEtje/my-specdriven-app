@@ -35,3 +35,14 @@
   - F1: `[P]` removed from T006.
   - A1: User Story 2 is kept; the owner answered "ja, graag" to the remediation offer that asked whether US2 stays.
   - T1: FR-005 says the trace to 003 FR-003 is kept, instead of "the same".
+
+## Phase: implement
+
+- Date: 2026-10-09
+- Trigger: `/speckit-implement`
+- Result:
+  - `logic.js`: `hasTag` and `metaLine`. `app.js`: the tag is inserted only when `hasTag`, with `003:FR-003 008:FR-001`; the meta line uses `metaLine` and carries `008:FR-004`.
+  - Tests: 71 unit (3 new) and 39 e2e (11 new), all green; lint, security lint and formatting clean. No CSS or `index.html` change.
+- Found and fixed during the build (tests only):
+  - Checking off a task under the Active filter removes it from the list, so the filter test now checks it off under All.
+  - `toHaveCount(0)` on `.tag` also passes when the card is missing, so the test first asserts the card is visible.
