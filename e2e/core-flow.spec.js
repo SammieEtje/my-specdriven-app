@@ -73,9 +73,13 @@ test('001:FR-010 persist, reload, tasks remain', async ({ page }) => {
   await expect(page.locator('#task-list .task-title', { hasText: 'Survives a reload' })).toBeVisible();
 });
 
+// T011 (007) The panel now shows the real documents of the element's features, one tab per phase
 test('001:FR-006 FR-007 click an element, trace panel shows its spec', async ({ page }) => {
   await page.click('#add-task-button');
-  await expect(page.locator('#trace-feature-id')).toHaveText('spec-01');
+  await expect(page.locator('#spec-selection')).toContainText('add-task-button');
+  await expect(page.locator('#phase-tabs [role="tab"]')).toHaveCount(6);
+  await expect(page.locator('#phase-tabs')).toBeVisible();
   await page.click('[data-target="app-header"]');
-  await expect(page.locator('#trace-feature-id')).toHaveText('spec-10');
+  await expect(page.locator('#spec-selection')).toContainText('app-header');
+  await expect(page.locator('#spec-selection')).toContainText('003');
 });

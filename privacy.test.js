@@ -4,11 +4,22 @@ import { readFileSync } from 'node:fs';
 
 // T015 Privacy check (004:FR-008, constitution V): the app makes no external requests
 
-const FILES = ['index.html', 'app.js', 'logic.js', 'html.js', 'styles.css', 'fonts/fonts.css'];
+// T005 (007) docs.js and markdown.js are app sources too
+const FILES = [
+  'index.html',
+  'app.js',
+  'logic.js',
+  'html.js',
+  'docs.js',
+  'markdown.js',
+  'styles.css',
+  'fonts/fonts.css'
+];
 
 const RULES = [
   { name: 'remote URL', pattern: /https?:\/\//i },
-  { name: 'fetch()', pattern: /\bfetch\s*\(/ },
+  // T005 (007) The only allowed request is fetch(docUrl(...)) in docs.js (research R1)
+  { name: 'fetch() outside docUrl()', pattern: /\bfetch\s*\((?!docUrl\()/ },
   { name: 'XMLHttpRequest', pattern: /\bXMLHttpRequest\b/ },
   { name: 'sendBeacon', pattern: /\bsendBeacon\b/ },
   { name: 'WebSocket', pattern: /\bnew\s+WebSocket\b/ },
@@ -59,4 +70,10 @@ test('004:FR-008 self-check: an analytics script tag is reported', () => {
 
 test('004:FR-008 self-check: commented-out URLs are ignored', () => {
   assert.deepEqual(findViolations('// see https://example.com\nconst a = 1;', 'fixture.js'), []);
+});
+
+test('007:FR-014 self-check: fetch is only allowed as fetch(docUrl(...))', () => {
+  assert.ok(findViolations("fetch('https://x');", 'fixture.js').some((v) => v.includes('fetch() outside docUrl()')));
+  assert.ok(findViolations('fetch(url);', 'fixture.js').some((v) => v.includes('fetch() outside docUrl()')));
+  assert.deepEqual(findViolations('fetch(docUrl(dir, file));', 'fixture.js'), []);
 });

@@ -12,6 +12,8 @@ const TYPES = {
   '.css': 'text/css; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
   '.woff2': 'font/woff2',
+  // T002 (007) The spec panel fetches the Spec Kit documents as text
+  '.md': 'text/markdown; charset=utf-8',
   '.txt': 'text/plain; charset=utf-8'
 };
 

@@ -235,74 +235,207 @@ h3 {
   border-top: var(--border-width-hairline) solid var(--border-default);
 }
 
-/* T035 Trace summary: technical IDs in mono (FR-002) */
-.trace-panel h2 {
+/* T018 (007) Spec panel: selection line in mono (003 FR-002), phase tabs in the filter tab style,
+   one scroll region for the document (research R7) */
+.spec-panel h2 {
   margin-bottom: var(--space-4);
 }
 
-.trace-summary {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-4);
-  padding: var(--space-4) 0;
-  margin-bottom: var(--space-4);
+.spec-selection {
+  padding: var(--space-3) 0;
+  margin-bottom: var(--space-3);
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-lh);
+  color: var(--text-secondary);
   border-top: var(--border-width-hairline) solid var(--border-default);
   border-bottom: var(--border-width-hairline) solid var(--border-default);
-}
-
-.trace-summary strong {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: var(--text-mono-size);
-  font-weight: var(--weight-medium);
   overflow-wrap: anywhere;
 }
 
-.trace-description {
-  font-size: var(--text-body-sm-size);
-  color: var(--text-secondary);
+.spec-selection code {
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-size);
+  font-weight: var(--weight-medium);
+  color: var(--text-primary);
 }
 
-/* T036 CodeBlock pattern, light variant (FR-009) */
-.trace-object {
-  max-height: calc(var(--space-11) * 3);
-  margin: 0;
-  padding: var(--space-4);
+.switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-bottom: var(--space-3);
+}
+
+/* T021 (007) display: flex would otherwise override the hidden attribute */
+.switcher[hidden] {
+  display: none;
+}
+
+.phase-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: var(--space-3);
+  border-bottom: var(--border-width-hairline) solid var(--border-default);
+}
+
+.phase-tabs [role="tab"] {
+  padding: var(--space-2) var(--space-3);
+  margin-bottom: calc(-1 * var(--border-width-hairline));
+  font-family: var(--font-mono);
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-lh);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: none;
+  color: var(--text-secondary);
+  border: none;
+  border-bottom: 2px solid transparent;
+}
+
+.phase-tabs [role="tab"]:hover {
+  color: var(--text-primary);
+}
+
+.phase-tabs [role="tab"][aria-selected="true"] {
+  color: var(--text-primary);
+  font-weight: var(--weight-semibold);
+  border-bottom-color: var(--border-strong);
+}
+
+.phase-panel {
+  max-height: 70vh;
+  overflow: auto;
+}
+
+.doc-source {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-label-size);
+  line-height: var(--text-label-lh);
+  letter-spacing: var(--text-label-tracking);
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+
+/* T018 (007) Rendered Markdown. Headings start at h3 because the panel title is the h2. */
+.md-body {
+  overflow-wrap: anywhere;
+}
+
+.md-body h3,
+.md-body h4,
+.md-body h5,
+.md-body h6 {
+  margin: var(--space-5) 0 var(--space-2);
+  font-size: var(--text-body-size);
+  font-weight: var(--weight-semibold);
+}
+
+.md-body h3 {
+  margin-top: 0;
+  font-size: var(--text-h3-size);
+  line-height: var(--text-h3-lh);
+}
+
+.md-body h6 {
+  font-size: var(--text-body-sm-size);
+}
+
+.md-body p,
+.md-body ul,
+.md-body ol,
+.md-body table,
+.md-body blockquote {
+  margin: 0 0 var(--space-3);
+}
+
+.md-body ul,
+.md-body ol {
+  padding-left: var(--space-5);
+}
+
+.md-body li > ul,
+.md-body li > ol {
+  margin-bottom: 0;
+}
+
+.md-body code {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption-size);
+}
+
+/* T018 (007) CodeBlock pattern, light variant (003 FR-009). Code wraps, so it adds no scroll region. */
+.md-body pre {
+  margin: 0 0 var(--space-3);
+  padding: var(--space-3);
   font-family: var(--font-mono);
   font-size: var(--text-caption-size);
   line-height: var(--text-mono-lh);
-  white-space: pre;
-  overflow-x: auto;
-  overflow-y: auto;
+  white-space: pre-wrap;
   background: var(--surface-sunken);
   color: var(--text-primary);
   border: var(--border-width-hairline) solid var(--border-default);
   border-radius: var(--radius-none);
 }
 
-/* T037 Phases separated by hairlines; the emphasised phase gets the Callout left rule.
-   No --shadow-sm here: the rule carries the emphasis (FR-003, no decorative shadows on static content). */
-.phase-list {
-  list-style: none;
-  padding: 0;
-  margin: var(--space-5) 0 0;
+.md-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-caption-size);
+}
+
+.md-body th,
+.md-body td {
+  padding: var(--space-1) var(--space-2);
+  text-align: left;
+  vertical-align: top;
+  border: var(--border-width-hairline) solid var(--border-default);
+}
+
+.md-body th {
+  background: var(--surface-sunken);
+  font-weight: var(--weight-semibold);
+}
+
+.md-body blockquote {
+  padding-left: var(--space-3);
+  color: var(--text-secondary);
+  border-left: var(--border-width-accent) solid var(--border-default);
+}
+
+.md-body hr {
+  margin: var(--space-4) 0;
+  border: none;
   border-top: var(--border-width-hairline) solid var(--border-default);
 }
 
-.phase-item {
-  padding: var(--space-3) 0;
-  border-bottom: var(--border-width-hairline) solid var(--border-default);
+.md-body a {
+  color: var(--text-link);
 }
 
-.phase-item strong {
-  display: block;
-  margin-bottom: var(--space-1);
-  font-family: var(--font-mono);
-  font-size: var(--text-label-size);
-  letter-spacing: var(--text-label-tracking);
-  text-transform: uppercase;
-  font-weight: var(--weight-medium);
-  color: var(--text-secondary);
+.md-body a:hover {
+  color: var(--text-link-hover);
+}
+
+.md-body .md-task {
+  list-style: none;
+}
+
+.md-check {
+  display: inline-block;
+  width: 0.75em;
+  height: 0.75em;
+  margin: 0 var(--space-2) 0 calc(-1 * var(--space-4));
+  vertical-align: baseline;
+  border: var(--border-width-hairline) solid var(--text-primary);
+}
+
+.md-check[aria-label="Done"] {
+  background: var(--text-primary);
+}
+
+.doc-notice p {
+  margin: 0;
 }
 
 .callout {
