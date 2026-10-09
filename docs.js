@@ -91,6 +91,22 @@ export const FEATURE_DOCS = [
       'spec.md',
       'tasks.md'
     ]
+  },
+  // T010 (008) Added after 007 merged (008 plan, Complexity Tracking)
+  {
+    id: '008',
+    dir: '008-hide-empty-tag',
+    title: 'Geen leeg tagkader bij taken zonder tag',
+    files: [
+      'contracts/ui-card.md',
+      'data-model.md',
+      'plan.md',
+      'prompts.md',
+      'quickstart.md',
+      'research.md',
+      'spec.md',
+      'tasks.md'
+    ]
   }
 ];
 
