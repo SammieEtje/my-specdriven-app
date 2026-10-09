@@ -99,7 +99,7 @@ description: "Task list for hiding the empty tag frame"
 
 - [X] T008 Run the full gate: `npm test`, `npm run lint`, `npm run lint:security`, `npm run format:check`, `npm run test:e2e`. Walk through the 8 manual scenarios in `specs/008-hide-empty-tag/quickstart.md` (headless Chromium is fine) and record the results under "Results"
 - [X] T009 Append `## Phase: implement` to `specs/008-hide-empty-tag/prompts.md`, commit, and tag `008-implement`
-- [ ] T010 **After confirmation**: push `008-hide-empty-tag` and its tags and open a PR to `main`. Make sure `code`, `security`, `usability` and CodeQL are green, and record the run in `quickstart.md`. If PR #13 (007) has merged by then, first update from `main`, add the 008 entry to `FEATURE_DOCS` in `docs.js` (plan, Complexity Tracking) and run `node --test docs.test.js`: both the manifest test and the SC-001 word-for-word test of 007 now cover the 008 documents. If the word-for-word test fails on a 008 document (for example nested backticks), simplify that document
+- [X] T010 **After confirmation**: push `008-hide-empty-tag` and its tags and open a PR to `main`. Make sure `code`, `security`, `usability` and CodeQL are green, and record the run in `quickstart.md`. If PR #13 (007) has merged by then, first update from `main`, add the 008 entry to `FEATURE_DOCS` in `docs.js` (plan, Complexity Tracking) and run `node --test docs.test.js`: both the manifest test and the SC-001 word-for-word test of 007 now cover the 008 documents. If the word-for-word test fails on a 008 document (for example nested backticks), simplify that document
 
 ---
 

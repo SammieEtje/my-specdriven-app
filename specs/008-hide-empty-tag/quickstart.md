@@ -42,3 +42,4 @@ Start with `npm start` and open `http://localhost:8000`. Clear the saved state f
 | 6 | Pass. Owner "Ava" and checked off: "Ava · Completed". |
 | 7 | Pass. After reload: still no frame, "Ava · Completed". |
 | 8 | Pass. All: frames on the two example tasks only; Active and Completed the same. |
+- **Quality gate (T010, 2026-10-09)**: PR [#14](https://github.com/SammieEtje/my-specdriven-app/pull/14), run [37933414542](https://github.com/SammieEtje/my-specdriven-app/actions/runs/37933414542): `code`, `security`, `usability` and CodeQL all pass. PR #13 (007) was still open, so no `docs.js` entry was needed.
